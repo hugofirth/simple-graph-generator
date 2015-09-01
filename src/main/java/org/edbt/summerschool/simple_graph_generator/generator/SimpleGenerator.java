@@ -16,14 +16,14 @@ import java.util.concurrent.Future;
 /**
  * Created by jonny on 01/09/15.
  */
-public class DefaultGenerator implements Generator {
+public class SimpleGenerator implements Generator {
 
     private Iterable<Integer> degreeSubSequence;
     private int numTriangles;
     private SelectionStrategy selectionStrategy;
 
 
-    public DefaultGenerator(Iterable<Integer> degreeSubSequence, int numTriangles) {
+    public SimpleGenerator(Iterable<Integer> degreeSubSequence, int numTriangles) {
         this.degreeSubSequence = degreeSubSequence;
         this.numTriangles = numTriangles;
     }
