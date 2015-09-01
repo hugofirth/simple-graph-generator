@@ -7,22 +7,23 @@ import java.util.Comparator;
  */
 public class OptimisationVector implements Comparable<OptimisationVector> {
 
+
     int numTriangles;
-    double degreeDerivation;
+    int unfinishedVertices;
     int edgeDistance;
 
-    public OptimisationVector(int numTriangles, int edgeDistance, double degreeDerivation) {
+    public OptimisationVector(int numTriangles, int unfinishedVertices, int edgeDistance) {
         this.numTriangles = numTriangles;
+        this.unfinishedVertices = unfinishedVertices;
         this.edgeDistance = edgeDistance;
-        this.degreeDerivation = degreeDerivation;
     }
 
     public int getNumTriangles() {
         return numTriangles;
     }
 
-    public double getDegreeDerivation() {
-        return degreeDerivation;
+    public int getUnfinishedVertices() {
+        return unfinishedVertices;
     }
 
     public int getEdgeDistance() {
