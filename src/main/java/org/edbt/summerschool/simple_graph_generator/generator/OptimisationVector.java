@@ -7,18 +7,18 @@ import java.util.Comparator;
  */
 public class OptimisationVector implements Comparable<OptimisationVector> {
 
-    double clusteringCoefficient;
+    int numTriangles;
     double degreeDerivation;
     int edgeDistance;
 
-    public OptimisationVector(double clusteringCoefficient, int edgeDistance, double degreeDerivation) {
-        this.clusteringCoefficient = clusteringCoefficient;
+    public OptimisationVector(int numTriangles, int edgeDistance, double degreeDerivation) {
+        this.numTriangles = numTriangles;
         this.edgeDistance = edgeDistance;
         this.degreeDerivation = degreeDerivation;
     }
 
-    public double getClusteringCoefficient() {
-        return clusteringCoefficient;
+    public int getNumTriangles() {
+        return numTriangles;
     }
 
     public double getDegreeDerivation() {
