@@ -24,5 +24,7 @@ package org.edbt.summerschool.simple_graph_generator.generator;
  * @author hugofirth
  */
 public enum Strategies {
-    SIMPLE, CONCURRENT
+    SIMPLE,
+    CONCURRENT,
+    SIMPLE_EDGE_ADDITION
 }

@@ -11,8 +11,18 @@ import java.util.concurrent.Future;
 public interface Strategy extends Callable<Graph> {
 
     static int numTriangles(Iterable<Integer> degreeSequence, double clusteringCoefficient) {
-        // TODO add triangle formula
-        return 0;
+
+        double trianglesNeeded = 0;
+
+        // calculate open triangles when edge degree is satisfied
+        for (int degree : degreeSequence){
+            trianglesNeeded += degree * (degree-1) / 2;
+        }
+
+        // use coefficient to determine number of triangles needed
+        trianglesNeeded *= (clusteringCoefficient/3.0);
+
+        return (int)trianglesNeeded;
     }
 
 }
