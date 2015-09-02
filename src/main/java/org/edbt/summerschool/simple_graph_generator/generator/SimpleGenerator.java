@@ -66,7 +66,7 @@ public class SimpleGenerator implements Generator {
             Set<Vertex> optCandidates = new HashSet<>();
 
             for (Set<Vertex> candidateSet : candidates) {
-                OptimisationVector newVector = considerEdges(g, candidateSet);
+                OptimisationVector newVector = considerEdges(g, optVector, candidateSet);
 
                 // keep best vector
                 if (newVector.compareTo(optVector) < 0) {
@@ -133,14 +133,14 @@ public class SimpleGenerator implements Generator {
                     temporaryEdges.add(e);
 
                     // update the degree deficit
-                    v.setProperty("degreeDeficit", v.getProperty("degreeDeficit") - 1);
-                    w.setProperty("degreeDeficit",w.getProperty("degreeDeficit")-1);
+                    v.setProperty("degreeDeficit", (int)v.getProperty("degreeDeficit") - 1);
+                    w.setProperty("degreeDeficit",(int)w.getProperty("degreeDeficit")-1);
 
                     // check if these nodes are done
-                    if (v.getProperty("degreeDeficit") == 0)
+                    if ((int)v.getProperty("degreeDeficit") == 0)
                         finished++;
 
-                    if (w.getProperty("degreeDeficit") == 0)
+                    if ((int)w.getProperty("degreeDeficit") == 0)
                         finished++;
 
                     // add new distance
