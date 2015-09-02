@@ -18,16 +18,18 @@
  */
 package org.edbt.summerschool.simple_graph_generator;
 
+import com.tinkerpop.blueprints.Graph;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.tuple.Pair;
+import org.edbt.summerschool.simple_graph_generator.generator.Strategies;
+import org.edbt.summerschool.simple_graph_generator.generator.StrategyFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 /**
  * Main class constitutes the entry point to the program
@@ -38,6 +40,7 @@ public class Main {
 
 
     private static Options options = new Options();
+    private static ExecutorService workThread = Executors.newSingleThreadExecutor();
 
     /**
      * The main method - entry point to the program.
@@ -83,11 +86,11 @@ public class Main {
             {
                 printHelp(constructOptions(), 80, "--- HELP ---", "", 2, 1, true, System.out);
             }
-            else if(!(commandLine.hasOption("size") || commandLine.hasOption('s')))
+            else if(!(commandLine.hasOption("input") || commandLine.hasOption('i')))
             {
-                throw new ParseException("You must specify the size of the graph to be generated!");
+                throw new ParseException("You must specify an input file containing a sequence of vertex degrees!");
             }
-            else if(!(commandLine.hasOption("output") || commandLine.hasOption('o')))
+            else if(!(commandLine.hasOption("destination") || commandLine.hasOption('d')))
             {
                 throw new ParseException("You must specify an output file destination for the generated graph!");
             }
@@ -97,24 +100,26 @@ public class Main {
             }
             else
             {
-                //TODO: Call down to the Reader class which should return a future so that we can display output while
-                // generator is running. The reader itself should read in the degree file as fast as possible and chunk
-                // it up into partitions to start the generation.
-//                displayBlankLines(1, System.out);
-//
-//                Future<Pair<Long, Long>> result = e.export(gdb);
-//                long startTime = System.currentTimeMillis();
-//                while(!result.isDone())
-//                {
-//                    System.out.print(".");
-//                    Thread.sleep(1000);
-//                }
-//                long elapsedTime = System.currentTimeMillis()-startTime;
-//
-//
-//                Pair<Long, Long> stats = result.get();
-//                displayBlankLines(2, System.out);
-//                System.out.println("[ Success! Took: "+elapsedTime+" ms in total]");
+                //TODO: Read in the degreeSequence (naively initially) dump in an iterable and pass to Strategy
+
+                displayBlankLines(1, System.out);
+
+                Double ccoeff = Double.parseDouble(commandLine.getOptionValue("clustering"));
+
+                Future<Graph> result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE, null, ccoeff));
+                long startTime = System.currentTimeMillis();
+                while(!result.isDone())
+                {
+                    System.out.print(".");
+                    Thread.sleep(1000);
+                }
+                long elapsedTime = System.currentTimeMillis()-startTime;
+
+
+                Graph generated = result.get();
+                //TODO: Write generated out to a file using an accepted format.
+                displayBlankLines(2, System.out);
+                System.out.println("[ Success! Took: "+elapsedTime+" ms in total]");
             }
         }
         catch (ParseException e)
@@ -139,10 +144,14 @@ public class Main {
     {
         final Map<String, Option> optionsMap = new HashMap<>();
 
-        optionsMap.put("help", new Option("h", "help", false, "Displays help information for the Simple Graph Generator."));
-        optionsMap.put("size", new Option("s", "size", true, "The size (number of vertices) of the graph to be generated."));
-        optionsMap.put("output", new Option("o", "output", true, "The desired destination for the generated graph file."));
-        optionsMap.put("clustering", new Option("c", "clustering", true, "The required clustering coefficient for the generated graph."));
+        optionsMap.put("help",
+                new Option("h", "help", false, "Displays help information for the Simple Graph Generator."));
+        optionsMap.put("input",
+                new Option("i", "input", true, "The input file containing a vertex degree per newline."));
+        optionsMap.put("destination",
+                new Option("d", "destination", true, "The desired destination for the generated graph file."));
+        optionsMap.put("clustering",
+                new Option("c", "clustering", true, "The required clustering coefficient for the generated graph."));
 
         final Options options = new Options();
         for(Option o : optionsMap.values())
