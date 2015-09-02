@@ -9,6 +9,8 @@ import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.edbt.summerschool.simple_graph_generator.graph.GraphMethods.edgeExists;
+
 /**
  * Created by jonny on 01/09/15.
  *
@@ -181,21 +183,7 @@ public class SimpleGenerator implements Generator {
 
     }
 
-    /**
-     * TODO this is inefficient, but TinkerGraph does not allow checking edge existance...
-     *
-     * @param v first vertex
-     * @param w second vertex
-     * @return true when there exists an edge between the vertices
-     */
-    private boolean edgeExists(Vertex v, Vertex w) {
-        for (Vertex u : v.getVertices(Direction.BOTH)){
-            if (u.equals(w)){
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     /**
      * Calculates how many open triangles end in given vertices

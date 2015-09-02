@@ -9,6 +9,8 @@ package org.edbt.summerschool.simple_graph_generator.generator;
  */
 public class OptimisationVector implements Comparable<OptimisationVector> {
 
+    int triangleUpperLimit;
+    int unfinishedVerticesUpperLimit;
 
     int numTrianglesLeft;
     int unfinishedVertices;
@@ -34,6 +36,7 @@ public class OptimisationVector implements Comparable<OptimisationVector> {
 
     @Override
     public int compareTo(OptimisationVector o) {
+
         // recall: < 0 => current object is smaller
         if (numTrianglesLeft != o.numTrianglesLeft)
             return numTrianglesLeft - numTrianglesLeft;
