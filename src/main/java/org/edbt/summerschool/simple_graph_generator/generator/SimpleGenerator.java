@@ -133,29 +133,31 @@ public class SimpleGenerator implements Generator {
                     temporaryEdges.add(e);
 
                     // update the degree deficit
-                    // TODO
+                    v.setProperty("degreeDeficit", v.getProperty("degreeDeficit") - 1);
+                    w.setProperty("degreeDeficit",w.getProperty("degreeDeficit")-1);
 
                     // check if these nodes are done
-                    if(v.getProperty("degreeDeficit") == 0)
+                    if (v.getProperty("degreeDeficit") == 0)
                         finished++;
 
-                    if(w.getProperty("degreeDeficit") == 0)
+                    if (w.getProperty("degreeDeficit") == 0)
                         finished++;
 
                     // add new distance
-                    // TODO
-
+                    distance += Math.abs((int)v.getProperty("position") - (int)w.getProperty("position"))
 
                 }
             }
         }
 
         // restore graph
+        for (Edge e : temporaryEdges) {
+            g.removeEdge(e);
+        }
 
         // update the optimisation vector
-        new OptimisationVector(o.getNumTriangles() - numTriangles, o.getUnfinishedVertices(), o.getEdgeDistance())
+        return new OptimisationVector(o.getNumTriangles() - numTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance)
 
-        return null;
     }
 
     private int calculateNewTriangles(Vertex v, Vertex w) {
