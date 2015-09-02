@@ -124,7 +124,7 @@ public class SimpleGenerator implements Generator {
             for (Vertex w : candidateSet) {
 
                 // check if its a new edge
-                if (!v.equals(w) /*&& ... */) { // TODO
+                if (!v.equals(w) /*&& !g.hasEdge(v,w)*/) { // TODO
                     // calculate the number of new triangles
                     newTriangles += calculateNewTriangles(v,w);
 
