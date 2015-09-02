@@ -122,25 +122,35 @@ public class SimpleGenerator implements Generator {
         // add each edge
         for (Vertex v : candidateSet) {
             for (Vertex w : candidateSet) {
-                // TODO finish
-//                if (!v.equals(w) && g.) {
-//
-//                    newTriangles += calculateNewTriangles(v,w);
-//
-//                    if(v.getProperty("degreeDeficit") == 0)
-//                        finished++;
-//
-//                    if(w.getProperty("degreeDeficit") == 0)
-//                        finished++;
-//
-//
-//                    Edge e = g.addEdge(null, v, w, "");
-//                    temporaryEdges.add(e);
-//
-//
-//                }
+
+                // check if its a new edge
+                if (!v.equals(w) /*&& ... */) { // TODO
+                    // calculate the number of new triangles
+                    newTriangles += calculateNewTriangles(v,w);
+
+                    // add edge
+                    Edge e = g.addEdge(null, v, w, "");
+                    temporaryEdges.add(e);
+
+                    // update the degree deficit
+                    // TODO
+
+                    // check if these nodes are done
+                    if(v.getProperty("degreeDeficit") == 0)
+                        finished++;
+
+                    if(w.getProperty("degreeDeficit") == 0)
+                        finished++;
+
+                    // add new distance
+                    // TODO
+
+
+                }
             }
         }
+
+        // restore graph
 
         // update the optimisation vector
         new OptimisationVector(o.getNumTriangles() - numTriangles, o.getUnfinishedVertices(), o.getEdgeDistance())
