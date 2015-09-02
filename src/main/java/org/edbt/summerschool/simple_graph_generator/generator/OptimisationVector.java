@@ -16,10 +16,20 @@ public class OptimisationVector implements Comparable<OptimisationVector> {
     int unfinishedVertices;
     int edgeDistance;
 
-    public OptimisationVector(int numTriangles, int unfinishedVertices, int edgeDistance) {
-        this.numTrianglesLeft = numTriangles;
+    public OptimisationVector(int triangleUpperLimit, int unfinishedVerticesUpperLimit, int numTrianglesLeft, int unfinishedVertices, int edgeDistance) {
+        this.triangleUpperLimit = triangleUpperLimit;
+        this.unfinishedVerticesUpperLimit = unfinishedVerticesUpperLimit;
+        this.numTrianglesLeft = numTrianglesLeft;
         this.unfinishedVertices = unfinishedVertices;
         this.edgeDistance = edgeDistance;
+    }
+
+    public int getTriangleUpperLimit() {
+        return triangleUpperLimit;
+    }
+
+    public int getUnfinishedVerticesUpperLimit() {
+        return unfinishedVerticesUpperLimit;
     }
 
     public int getNumTrianglesLeft() {

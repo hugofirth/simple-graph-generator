@@ -56,7 +56,7 @@ public class SimpleGenerator implements Generator {
 
 
 
-        OptimisationVector optVector = new OptimisationVector(numTriangles,unfinishedNodes,0);
+        OptimisationVector optVector = new OptimisationVector((int)(numTriangles*0.05),(int)(position*0.05),numTriangles,unfinishedNodes,0);
         while (!minimalDegreeDeficit) {
             // selection strategy
             Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g);
@@ -179,7 +179,7 @@ public class SimpleGenerator implements Generator {
         }
 
         // update the optimisation vector
-        return new OptimisationVector(o.getNumTrianglesLeft() - numTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance);
+        return new OptimisationVector(o.getTriangleUpperLimit(),o.getUnfinishedVerticesUpperLimit(),o.getNumTrianglesLeft() - numTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance);
 
     }
 
