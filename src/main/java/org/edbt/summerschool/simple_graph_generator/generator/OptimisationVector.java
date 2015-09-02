@@ -37,6 +37,24 @@ public class OptimisationVector implements Comparable<OptimisationVector> {
     @Override
     public int compareTo(OptimisationVector o) {
 
+        boolean tLimit1Exceeded = (numTrianglesLeft > triangleUpperLimit);
+        boolean tLimit2Exceeded = (o.numTrianglesLeft > o.triangleUpperLimit);
+        // if only one exceeds the limit, return the other one
+        if (!tLimit1Exceeded && tLimit2Exceeded)
+            return -1;
+        if (tLimit1Exceeded && !tLimit2Exceeded)
+            return 1;
+
+
+        boolean uvLimit1Exceeded = (unfinishedVertices > unfinishedVerticesUpperLimit);
+        boolean uvLimit2Exceeded = (o.unfinishedVertices > o.unfinishedVerticesUpperLimit);
+        // if only one exceeds the limit, return the other one
+        if (!uvLimit1Exceeded && uvLimit2Exceeded)
+            return -1;
+        if (uvLimit1Exceeded && !uvLimit2Exceeded)
+            return 1;
+
+
         // recall: < 0 => current object is smaller
         if (numTrianglesLeft != o.numTrianglesLeft)
             return numTrianglesLeft - numTrianglesLeft;
