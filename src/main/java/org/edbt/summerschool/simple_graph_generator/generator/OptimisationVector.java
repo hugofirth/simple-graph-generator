@@ -45,6 +45,36 @@ public class OptimisationVector implements Comparable<OptimisationVector> {
     }
 
     @Override
+    public int hashCode() {
+        int result = triangleUpperLimit;
+        result = 31 * result + unfinishedVerticesUpperLimit;
+        result = 31 * result + numTrianglesLeft;
+        result = 31 * result + unfinishedVertices;
+        result = 31 * result + edgeDistance;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OptimisationVector that = (OptimisationVector) o;
+
+        if (triangleUpperLimit != that.triangleUpperLimit) return false;
+        if (unfinishedVerticesUpperLimit != that.unfinishedVerticesUpperLimit) return false;
+        if (numTrianglesLeft != that.numTrianglesLeft) return false;
+        if (unfinishedVertices != that.unfinishedVertices) return false;
+        return edgeDistance == that.edgeDistance;
+
+    }
+
+    /**
+     * IMPROVE we need to extract this to a more generic comparator.
+     * @param o
+     * @return -1 when this object is smaller, 1 when the parameter is smaller, 0 when both can be considered equal
+     */
+    @Override
     public int compareTo(OptimisationVector o) {
 
         boolean tLimit1Exceeded = (numTrianglesLeft > triangleUpperLimit);
