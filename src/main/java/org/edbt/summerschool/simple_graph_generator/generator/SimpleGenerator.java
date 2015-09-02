@@ -144,7 +144,7 @@ public class SimpleGenerator implements Generator {
                         finished++;
 
                     // add new distance
-                    distance += Math.abs((int)v.getProperty("position") - (int)w.getProperty("position"))
+                    distance += Math.abs((int)v.getProperty("position") - (int)w.getProperty("position"));
 
                 }
             }
@@ -156,7 +156,7 @@ public class SimpleGenerator implements Generator {
         }
 
         // update the optimisation vector
-        return new OptimisationVector(o.getNumTriangles() - numTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance)
+        return new OptimisationVector(o.getNumTriangles() - numTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance);
 
     }
 
