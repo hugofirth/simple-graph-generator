@@ -16,10 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.edbt.summerschool.simple_graph_generator.generator;
+package org.edbt.summerschool.simple_graph_generator.generator.heuristic;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
+import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
 
 
 import java.util.*;

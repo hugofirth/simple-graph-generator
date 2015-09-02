@@ -1,4 +1,4 @@
-package org.edbt.summerschool.simple_graph_generator.generator;
+package org.edbt.summerschool.simple_graph_generator.generator.simple;
 
 
 import com.tinkerpop.blueprints.Direction;
@@ -6,6 +6,9 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
+import org.edbt.summerschool.simple_graph_generator.generator.Generator;
+import org.edbt.summerschool.simple_graph_generator.generator.OptimisationVector;
+import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
 
 import java.util.HashSet;
 import java.util.Set;

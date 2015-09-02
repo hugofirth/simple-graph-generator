@@ -42,7 +42,7 @@ public class PotentialEdge implements Set<Vertex> {
 
     @Override
     public int size() {
-        return (isEmpty)?2;
+        return (isEmpty)?0:2;
     }
 
     @Override
@@ -57,17 +57,35 @@ public class PotentialEdge implements Set<Vertex> {
 
     @Override
     public Iterator<Vertex> iterator() {
-        return null;
+        return new Iterator<Vertex>() {
+            @Override
+            public boolean hasNext() {
+                return false;
+            }
+
+            @Override
+            public Vertex next() {
+                return null;
+            }
+
+            @Override
+            public void remove() {
+
+            }
+        };
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        return new Object[]{left, right};
     }
 
     @Override
     public <T> T[] toArray(T[] a) {
-        return null;
+        if(a.length >= 2)
+            //TODO Finish implementing this!
+
+        return new T[];
     }
 
     @Override

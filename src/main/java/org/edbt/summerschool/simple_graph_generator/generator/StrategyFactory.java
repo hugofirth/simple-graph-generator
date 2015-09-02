@@ -18,6 +18,8 @@
  */
 package org.edbt.summerschool.simple_graph_generator.generator;
 
+import org.edbt.summerschool.simple_graph_generator.generator.simple.SimpleStrategy;
+
 /**
  * Description of Class
  *
