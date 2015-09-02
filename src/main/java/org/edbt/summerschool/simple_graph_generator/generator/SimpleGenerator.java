@@ -11,10 +11,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 /**
  * Created by jonny on 01/09/15.
@@ -56,13 +52,14 @@ public class SimpleGenerator implements Generator {
         }
 
 
-        OptimisationVector optVector = new OptimisationVector(numTriangles,unfinishedNodes,0);
 
+        OptimisationVector optVector = new OptimisationVector(numTriangles,unfinishedNodes,0);
         while (!minimalDegreeDeficit) {
             // selection strategy
             Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g);
 
 
+            boolean newOptFound = false;
             Set<Vertex> optCandidates = new HashSet<>();
 
             for (Set<Vertex> candidateSet : candidates) {
@@ -72,45 +69,69 @@ public class SimpleGenerator implements Generator {
                 if (newVector.compareTo(optVector) < 0) {
                     optVector = newVector;
                     optCandidates = candidateSet;
+                    newOptFound = true;
                 }
 
                 // stop when condition is met
                 if (optimisationOverThreshold(newVector)) {
                     optVector = newVector;
                     optCandidates = candidateSet;
+                    newOptFound = true;
                     break;
                 }
             }
 
-            // TODO reason about degree deficit
+            // handle the case when no local optimum is found
+            if (!newOptFound) {
+                minimalDegreeDeficit = selectionStrategy.handleNoOptimalFound(g, optVector);
+            } else {
 
-            // actually connect vertices
-
-            for (Pair<Vertex, Vertex> edge : createEdges(optCandidates)) {
-                g.addEdge(null, edge.getLeft(), edge.getRight(), "");
-                // TODO change degree deficit
+                // actually connect vertices
+                createEdges(optCandidates);
             }
         }
 
         return g;
     }
 
-    private List<Pair<Vertex, Vertex>> createEdges(Set<Vertex> candidateSet) {
+    /**
+     * Creates the set of all edges between the given vertices.
+     * @param candidateSet
+     * @return
+     */
+    private void createEdges(Set<Vertex> candidateSet) {
 
-        List<Pair<Vertex, Vertex>> edgeList = new LinkedList<>();
         for (Vertex v : candidateSet) {
             for (Vertex w : candidateSet) {
                 if (!v.equals(w)) {
-                    Pair<Vertex, Vertex> pair = Pair.of(v, w);
-                    edgeList.add(pair);
+                   addEdgeAndUpdateDeficit(v,w);
+
                 }
             }
         }
 
-        return edgeList;
-
     }
 
+    private Edge addEdgeAndUpdateDeficit(Vertex v, Vertex w) {
+
+        // create new edge
+        Edge e = v.addEdge("",w);
+
+        // update the degree deficit
+        v.setProperty("degreeDeficit", (int)v.getProperty("degreeDeficit") - 1);
+        w.setProperty("degreeDeficit",(int)w.getProperty("degreeDeficit") - 1);
+
+        return e;
+    }
+
+    /**
+     * Calculate the effect of adding edges on the optimisation vector.
+     * @param g the graph
+     * @param o the optimisation vector
+     * @param candidateSet the set of vertices to connect to each other
+     *
+     * @return the optimisation vector after adding edges
+     */
     private OptimisationVector considerEdges(Graph g, OptimisationVector o, Set<Vertex> candidateSet) {
 
 
@@ -124,17 +145,16 @@ public class SimpleGenerator implements Generator {
             for (Vertex w : candidateSet) {
 
                 // check if its a new edge
-                if (!v.equals(w) /*&& !g.hasEdge(v,w)*/) { // TODO
+                if (v.equals(w) || edgeExists(v,w)) {
+                   break;
+                }
                     // calculate the number of new triangles
-                    newTriangles += calculateNewTriangles(v,w);
+                    newTriangles += calculateOpenTriangles(v, w);
 
                     // add edge
-                    Edge e = g.addEdge(null, v, w, "");
+                    Edge e = addEdgeAndUpdateDeficit(v,w);
                     temporaryEdges.add(e);
 
-                    // update the degree deficit
-                    v.setProperty("degreeDeficit", (int)v.getProperty("degreeDeficit") - 1);
-                    w.setProperty("degreeDeficit",(int)w.getProperty("degreeDeficit")-1);
 
                     // check if these nodes are done
                     if ((int)v.getProperty("degreeDeficit") == 0)
@@ -146,7 +166,7 @@ public class SimpleGenerator implements Generator {
                     // add new distance
                     distance += Math.abs((int)v.getProperty("position") - (int)w.getProperty("position"));
 
-                }
+
             }
         }
 
@@ -160,7 +180,29 @@ public class SimpleGenerator implements Generator {
 
     }
 
-    private int calculateNewTriangles(Vertex v, Vertex w) {
+    /**
+     * TODO this is inefficient, but TinkerGraph does not allow checking edge existance...
+     *
+     * @param v first vertex
+     * @param w second vertex
+     * @return true when there exists an edge between the vertices
+     */
+    private boolean edgeExists(Vertex v, Vertex w) {
+        for (Vertex u : v.getVertices(Direction.BOTH)){
+            if (u.equals(w)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Calculates how many open triangles end in given vertices
+     * @param v first edge endpoint
+     * @param w second edge endpoint
+     * @return the number of open triangles ending in the given vertices
+     */
+    private int calculateOpenTriangles(Vertex v, Vertex w) {
 
         Iterable<Vertex> neighborsV = v.getVertices(Direction.BOTH);
         Iterable<Vertex> neighborsW = w.getVertices(Direction.BOTH);
