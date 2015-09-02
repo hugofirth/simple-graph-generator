@@ -14,6 +14,10 @@ import java.util.Set;
 
 /**
  * Created by jonny on 01/09/15.
+ *
+ * @author Jonny Daenen
+ * @author Hugo Firth
+ * @author Bas Ketsman
  */
 public class SimpleGenerator implements Generator {
 
@@ -153,7 +157,7 @@ public class SimpleGenerator implements Generator {
 
                     // add edge
                     Edge e = addEdgeAndUpdateDeficit(v,w);
-                    temporaryEdges.add(e);
+                temporaryEdges.add(e);
 
 
                     // check if these nodes are done

@@ -7,6 +7,10 @@ import java.util.Set;
 
 /**
  * Created by jonny on 01/09/15.
+ *
+ * @author Jonny Daenen
+ * @author Hugo Firth
+ * @author Bas Ketsman
  */
 public interface SelectionStrategy {
 

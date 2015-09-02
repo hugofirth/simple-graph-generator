@@ -4,6 +4,10 @@ import java.util.Comparator;
 
 /**
  * Created by jonny on 01/09/15.
+ *
+ * @author Jonny Daenen
+ * @author Hugo Firth
+ * @author Bas Ketsman
  */
 public class OptimisationVector implements Comparable<OptimisationVector> {
 
