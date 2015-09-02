@@ -12,11 +12,18 @@ public class EdgeSelectionStrategy implements SelectionStrategy {
     @Override
     public Iterable<Set<Vertex>> getCandidateIterable(Graph g) {
 
-        // TODO implement
-
+        // TODO filter vertices
         // get vertices that have a deficit
-
         // create all combinations
+
+        for (Vertex v: g.getVertices()) {
+            for (Vertex w : g.getVertices()) {
+                Set<Vertex> set = new HashSet<>();
+            }
+        }
+
+
+
 
         return null;
     }

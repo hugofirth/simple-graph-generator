@@ -1,7 +1,5 @@
 package org.edbt.summerschool.simple_graph_generator.generator;
 
-import java.util.Comparator;
-
 /**
  * Created by jonny on 01/09/15.
  *
@@ -12,18 +10,18 @@ import java.util.Comparator;
 public class OptimisationVector implements Comparable<OptimisationVector> {
 
 
-    int numTriangles;
+    int numTrianglesLeft;
     int unfinishedVertices;
     int edgeDistance;
 
     public OptimisationVector(int numTriangles, int unfinishedVertices, int edgeDistance) {
-        this.numTriangles = numTriangles;
+        this.numTrianglesLeft = numTriangles;
         this.unfinishedVertices = unfinishedVertices;
         this.edgeDistance = edgeDistance;
     }
 
-    public int getNumTriangles() {
-        return numTriangles;
+    public int getNumTrianglesLeft() {
+        return numTrianglesLeft;
     }
 
     public int getUnfinishedVertices() {
@@ -36,7 +34,16 @@ public class OptimisationVector implements Comparable<OptimisationVector> {
 
     @Override
     public int compareTo(OptimisationVector o) {
-        // TODO implement
+        // recall: < 0 => current object is smaller
+        if (numTrianglesLeft != o.numTrianglesLeft)
+            return numTrianglesLeft - numTrianglesLeft;
+
+        if (unfinishedVertices != o.unfinishedVertices)
+            return unfinishedVertices - o.unfinishedVertices;
+
+        if (edgeDistance != o.edgeDistance)
+            return edgeDistance - o.edgeDistance;
+
         return 0;
     }
 }

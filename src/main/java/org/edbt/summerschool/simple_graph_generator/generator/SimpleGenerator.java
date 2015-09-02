@@ -5,11 +5,8 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -180,7 +177,7 @@ public class SimpleGenerator implements Generator {
         }
 
         // update the optimisation vector
-        return new OptimisationVector(o.getNumTriangles() - numTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance);
+        return new OptimisationVector(o.getNumTrianglesLeft() - numTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance);
 
     }
 
