@@ -8,9 +8,7 @@ import java.util.Set;
 /**
  * Created by jonny on 01/09/15.
  */
-public class SelectionStrategy {
+public interface SelectionStrategy {
 
-    public Iterable<Set<Vertex>> getCandidateIterable(Graph g) {
-        return null;
-    }
+    public Iterable<Set<Vertex>> getCandidateIterable(Graph g);
 }

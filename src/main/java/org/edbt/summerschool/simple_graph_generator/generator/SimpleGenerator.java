@@ -1,13 +1,12 @@
 package org.edbt.summerschool.simple_graph_generator.generator;
 
+import com.sun.istack.internal.NotNull;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -44,8 +43,8 @@ public class SimpleGenerator implements Generator {
         Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g);
 
 
-        OptimisationVector optVector = new OptimisationVector();
-        List<Pair<Vertex,Vertex>> optEdges = new LinkedList<>();
+        OptimisationVector optVector = new OptimisationVector(0, 100, 1D);
+        Map<Vertex,Vertex> optEdges = new HashMap<>();
 
         for (Set<Vertex> candidateSet : candidates) {
             OptimisationVector newVector = considerEdges(g, candidateSet);
@@ -68,8 +67,8 @@ public class SimpleGenerator implements Generator {
 
         // actually connect vertices
 
-        for (Pair<Vertex,Vertex> edge : optEdges) {
-            g.addEdge(null,edge.getLeft(),edge.getRight(),"");
+        for (Map.Entry<Vertex,Vertex> edge : optEdges.entrySet()) {
+            g.addEdge(null,edge.getKey(),edge.getValue(),"");
         }
 
         return g;
