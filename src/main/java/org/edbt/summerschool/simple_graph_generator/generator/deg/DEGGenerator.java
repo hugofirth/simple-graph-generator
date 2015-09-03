@@ -1,8 +1,9 @@
-package org.edbt.summerschool.simple_graph_generator.generator;
+package org.edbt.summerschool.simple_graph_generator.generator.deg;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
+import org.edbt.summerschool.simple_graph_generator.generator.Generator;
 import org.edbt.summerschool.simple_graph_generator.graph.GraphMethods;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class DEGGenerator implements Generator {
 
     private Iterable<Integer> degreeSubSequence;
     private int numTriangles;
+    final int MAX_LOOP_ITERATIONS = 20;
 
     private class DegreeDeficitVector {
         private ArrayList<Integer> degreeDeficit = new ArrayList<>();
@@ -73,18 +75,20 @@ public class DEGGenerator implements Generator {
 
         int position = 0;
         for (int degree : degreeSubSequence) {
-            Vertex v = g.addVertex(position); // WARNING: I assume that the graph library (always) uses 'position' as vertex id
+            Vertex v = g.addVertex(position); // POTENTIAL ISSUE: We assume that the graph library (always) uses 'position' as vertex id
             degreeDeficit.setDegree(position, degree);
             g.addVertex(position);
         }
 
-        while (numTriangles > 0 && degreeDeficit.totalDegreeDeficit() > 1) {
+        int loopIterations = 0;
+        while (numTriangles > 0 && degreeDeficit.totalDegreeDeficit() > 1 && loopIterations < MAX_LOOP_ITERATIONS) {
+            loopIterations++;
             Integer a = degreeDeficit.randomNodePosition();
             Integer b = degreeDeficit.randomNodePosition();
             Integer c = degreeDeficit.randomNodePosition();
 
             if (a.equals(b) || b.equals(c) || a.equals(c)) {
-                continue; // TODO: potential infinite loop!!!
+                continue;
             }
 
             Vertex vertexA = g.getVertex(a);
@@ -110,12 +114,14 @@ public class DEGGenerator implements Generator {
             numTriangles -= 1;
         }
 
-        while (degreeDeficit.totalDegreeDeficit() > 1) {
+        loopIterations = 0;
+        while (degreeDeficit.totalDegreeDeficit() > 1 && loopIterations < MAX_LOOP_ITERATIONS) {
+            loopIterations++;
             Integer a = degreeDeficit.randomNodePosition();
             Integer b = degreeDeficit.randomNodePosition();
 
             if (a == null || b == null) {
-                continue; // TODO: potential infinite loop
+                continue;
             }
 
             Vertex vertexA = g.getVertex(a);
