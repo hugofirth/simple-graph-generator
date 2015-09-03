@@ -8,8 +8,13 @@ import java.util.Random;
 /**
  */
 public class DegreeDeficitVector {
-    private ArrayList<Integer> degreeDeficit = new ArrayList<>();
+    private ArrayList<Integer> degreeDeficit = null;
     private Integer totalDegreeDeficit = 0;
+
+    public DegreeDeficitVector() {
+        this.degreeDeficit = new ArrayList<>();
+        this.totalDegreeDeficit = 0;
+    }
 
     public int addDegree(Integer d) {
         totalDegreeDeficit += d;
@@ -29,15 +34,16 @@ public class DegreeDeficitVector {
 
     public void decrease(Integer position) {
         degreeDeficit.set(position, degreeDeficit.get(position) - 1);
+        --totalDegreeDeficit;
     }
 
     public Integer totalDegreeDeficit() {
-        return totalDegreeDeficit;
+        return this.totalDegreeDeficit;
     }
 
     public Integer randomNodePosition() {
         Random randomGenerator = new Random();
-        int randomInt = randomGenerator.nextInt(totalDegreeDeficit()); // TODO: check if range is as desired?
+        int randomInt = randomGenerator.nextInt(totalDegreeDeficit())+1; // TODO: check if range is as desired?
         System.out.print("Randomint:" + Integer.toString(randomInt));
         int prefixSum = 0;
         int position = 0;
@@ -51,6 +57,8 @@ public class DegreeDeficitVector {
         if (returnPosition != null) {
             System.out.print(" | returnPosition: " + Integer.toString(returnPosition));
             System.out.println(" | degree of position: " + Integer.toString(degreeDeficit.get(returnPosition)));
+        } else {
+            System.out.println("Random number generation failed:" + Integer.toString(randomInt));
         }
 
         return returnPosition;
@@ -69,5 +77,6 @@ public class DegreeDeficitVector {
             System.out.print(Integer.toString(degree) + " ");
         }
         System.out.println();
+        System.out.println("Total degree deficit: " + Integer.toString(totalDegreeDeficit));
     }
 }
