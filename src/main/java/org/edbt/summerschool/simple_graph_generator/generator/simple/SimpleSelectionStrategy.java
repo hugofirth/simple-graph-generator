@@ -1,7 +1,9 @@
-package org.edbt.summerschool.simple_graph_generator.generator;
+package org.edbt.summerschool.simple_graph_generator.generator.simple;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
+import org.edbt.summerschool.simple_graph_generator.generator.OptimisationVector;
+import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,7 +14,7 @@ import java.util.Set;
  *
  * @author Jonny Daenen
  */
-public class EdgeSelectionStrategy implements SelectionStrategy {
+public class SimpleSelectionStrategy implements SelectionStrategy {
     @Override
     public Iterable<Set<Vertex>> getCandidateIterable(Graph g) {
 

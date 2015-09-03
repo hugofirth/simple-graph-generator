@@ -21,7 +21,6 @@ package org.edbt.summerschool.simple_graph_generator;
 import com.sun.tools.javac.util.List;
 import com.tinkerpop.blueprints.Graph;
 import org.apache.commons.cli.*;
-import org.apache.commons.lang3.tuple.Pair;
 import org.edbt.summerschool.simple_graph_generator.generator.Strategies;
 import org.edbt.summerschool.simple_graph_generator.generator.StrategyFactory;
 

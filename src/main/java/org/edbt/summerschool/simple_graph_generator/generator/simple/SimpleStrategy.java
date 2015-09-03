@@ -16,9 +16,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.edbt.summerschool.simple_graph_generator.generator;
+package org.edbt.summerschool.simple_graph_generator.generator.simple;
 
 import com.tinkerpop.blueprints.Graph;
+import org.edbt.summerschool.simple_graph_generator.generator.Strategy;
 
 /**
  * Description of Class

@@ -1,15 +1,20 @@
-package org.edbt.summerschool.simple_graph_generator.generator;
+package org.edbt.summerschool.simple_graph_generator.generator.simple;
+
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
+import org.edbt.summerschool.simple_graph_generator.generator.Generator;
+import org.edbt.summerschool.simple_graph_generator.generator.OptimisationVector;
+import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.edbt.summerschool.simple_graph_generator.graph.GraphMethods.edgeExists;
+
 
 /**
  * Created by jonny on 01/09/15.
@@ -55,12 +60,10 @@ public class SimpleGenerator implements Generator {
         }
 
 
-
         OptimisationVector optVector = new OptimisationVector((int)(numTriangles*0.05),(int)(position*0.05),numTriangles,unfinishedNodes,0);
         while (!minimalDegreeDeficit) {
             // selection strategy
             Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g);
-
 
             boolean newOptFound = false;
             Set<Vertex> optCandidates = new HashSet<>();
@@ -108,7 +111,6 @@ public class SimpleGenerator implements Generator {
             for (Vertex w : candidateSet) {
                 if (!v.equals(w)) {
                    addEdgeAndUpdateDeficit(v,w);
-
                 }
             }
         }
