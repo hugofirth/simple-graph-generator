@@ -47,15 +47,19 @@ public class DEGGenerator implements Generator {
         public Integer randomNodePosition() {
             Random randomGenerator = new Random();
             int randomInt = randomGenerator.nextInt(totalDegreeDeficit()); // TODO: check if range is as desired?
-
+            System.out.print("Randomint:" + Integer.toString(randomInt));
             int prefixSum = 0;
             int position = 0;
             Integer returnPosition = null;
             for (Integer degree : degreeDeficit) {
-                if (prefixSum < randomInt && randomInt <= prefixSum + degree); // TODO: check if this is a desired
-                returnPosition = new Integer(position);
+                if (prefixSum < randomInt && randomInt <= prefixSum + degree) // TODO: check if this is a desired
+                    returnPosition = new Integer(position);
                 prefixSum += degree;
                 position ++;
+            }
+            if (returnPosition != null) {
+                System.out.print(" | returnPosition: " + Integer.toString(returnPosition));
+                System.out.println(" | degree of position: " + Integer.toString(degreeDeficit.get(returnPosition)));
             }
 
             return returnPosition;
@@ -89,7 +93,7 @@ public class DEGGenerator implements Generator {
             Integer b = degreeDeficit.randomNodePosition();
             Integer c = degreeDeficit.randomNodePosition();
 
-            if (a.equals(b) || b.equals(c) || a.equals(c)) {
+            if (a == null || b == null || c == null || a.equals(b) || b.equals(c) || a.equals(c)) {
                 continue;
             }
 
