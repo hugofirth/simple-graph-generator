@@ -105,6 +105,7 @@ public class Main {
 
 
                 int [] seq = {1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2};
+//                int [] seq = {11,11,11,11,11,11,11,11,11,11,11,11};
                 Iterable<Integer> seqList = Ints.asList(seq);
                 displayBlankLines(1, System.out);
 

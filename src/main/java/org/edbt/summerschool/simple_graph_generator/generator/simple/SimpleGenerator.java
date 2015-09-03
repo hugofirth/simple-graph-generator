@@ -65,7 +65,7 @@ public class SimpleGenerator implements Generator {
         }
 
 
-        OptimisationVector optVector = new OptimisationVector((int)(numTriangles*0.05),(int)(position*0.05),numTriangles,unfinishedNodes,0);
+        OptimisationVector optVector = new OptimisationVector((int)(numTriangles*0.05),(int)(position*0.05),numTriangles,unfinishedNodes,totalDegreeDeficit,0);
         while (!minimalDegreeDeficit) {
 
             System.out.println("---");
@@ -85,7 +85,7 @@ public class SimpleGenerator implements Generator {
                 OptimisationVector newVector = considerEdges(g, optVector, candidateSet);
 
                 // keep best vector
-                if (newVector.compareTo(bestOpt) < 0 || !newOptFound) {
+                if (newVector.compareTo(bestOpt) < 0) {
                     bestOpt = newVector;
                     optCandidates = candidateSet;
                     newOptFound = true;
@@ -202,6 +202,7 @@ public class SimpleGenerator implements Generator {
         int newTriangles = 0;
         int distance = 0;
         int finished = 0;
+        int edgesAdded = 0;
         Set<Edge> temporaryEdges = new HashSet<>();
 
         // add each edge
@@ -221,6 +222,7 @@ public class SimpleGenerator implements Generator {
 
                 // add edge
                 Edge e = addEdgeAndUpdateDeficit(v,w);
+                edgesAdded++;
                 temporaryEdges.add(e);
 
 
@@ -244,7 +246,7 @@ public class SimpleGenerator implements Generator {
         }
 
         // update the optimisation vector
-        OptimisationVector opt = new OptimisationVector(o.getTriangleUpperLimit(),o.getUnfinishedVerticesUpperLimit(),o.getNumTrianglesLeft() - newTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance);
+        OptimisationVector opt = new OptimisationVector(o.getTriangleUpperLimit(),o.getUnfinishedVerticesUpperLimit(),o.getNumTrianglesLeft() - newTriangles, o.getUnfinishedVertices() - finished, o.getEdgesLeft() - edgesAdded, o.getEdgeDistance()+ distance);
 //        System.out.println("Prev Vector: " + o);
 //        System.out.println("New Vector: "+ opt);
         return opt;
