@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+import static org.edbt.summerschool.simple_graph_generator.graph.GraphMethods.edgeExists;
+
 /**
  * Created by jonny on 02/09/15.
  *
@@ -24,8 +26,9 @@ public class SimpleSelectionStrategy implements SelectionStrategy {
         // get vertices that have a deficit
         Set<Vertex> allVertices = new HashSet<>();
         for (Vertex v: g.getVertices()) {
-            if ((int)v.getProperty("degreeDeficit") > 0)
+            if ((int)v.getProperty("degreeDeficit") > 0) {
                 allVertices.add(v);
+            }
         }
 
 
@@ -34,7 +37,7 @@ public class SimpleSelectionStrategy implements SelectionStrategy {
 
         for (Vertex v : allVertices) {
             for (Vertex w : allVertices) {
-                if (v.equals(w))
+                if (v.equals(w) || edgeExists(v,w))
                     break;
                 Set<Vertex> set = new HashSet<>();
                 set.add(v);

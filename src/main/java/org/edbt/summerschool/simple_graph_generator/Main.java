@@ -110,7 +110,7 @@ public class Main {
 
                 Double ccoeff = Double.parseDouble(commandLine.getOptionValue("clustering"));
 
-                Future<Graph> result = workThread.submit(StrategyFactory.createStrategy(Strategies.EXISTING_STRATEGY, seqList, ccoeff));
+                Future<Graph> result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE, seqList, ccoeff));
                 long startTime = System.currentTimeMillis();
                 while(!result.isDone())
                 {
