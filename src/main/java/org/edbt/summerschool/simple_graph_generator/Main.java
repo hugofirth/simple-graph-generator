@@ -21,13 +21,12 @@ package org.edbt.summerschool.simple_graph_generator;
 import com.google.common.primitives.Ints;
 import com.sun.tools.javac.util.List;
 import com.tinkerpop.blueprints.Graph;
+import com.tinkerpop.blueprints.util.io.graphml.GraphMLWriter;
 import org.apache.commons.cli.*;
 import org.edbt.summerschool.simple_graph_generator.generator.Strategies;
 import org.edbt.summerschool.simple_graph_generator.generator.StrategyFactory;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -111,7 +110,7 @@ public class Main {
 
                 Double ccoeff = Double.parseDouble(commandLine.getOptionValue("clustering"));
 
-                Future<Graph> result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE, seqList, ccoeff));
+                Future<Graph> result = workThread.submit(StrategyFactory.createStrategy(Strategies.EXISTING_STRATEGY, seqList, ccoeff));
                 long startTime = System.currentTimeMillis();
                 while(!result.isDone())
                 {
@@ -125,6 +124,9 @@ public class Main {
                 System.out.println(generated.toString());
                 //TODO: Write generated out to a file using an accepted format.
                 displayBlankLines(2, System.out);
+                OutputStream out = new FileOutputStream(new File(commandLine.getOptionValue("destination")));
+
+                GraphMLWriter.outputGraph(generated, out);
                 System.out.println("[ Success! Took: "+elapsedTime+" ms in total]");
             }
         }
