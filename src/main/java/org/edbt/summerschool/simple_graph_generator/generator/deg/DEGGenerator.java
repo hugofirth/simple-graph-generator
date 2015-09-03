@@ -24,16 +24,17 @@ public class DEGGenerator implements Generator {
         private ArrayList<Integer> degreeDeficit = new ArrayList<>();
         private Integer totalDegreeDeficit = 0;
 
-        public void setDegree(Integer i, Integer d) {
-            Integer old = degreeDeficit.get(i);
-            if (old == null) {
-                totalDegreeDeficit += d;
-            } else {
-                totalDegreeDeficit += d - old;
-            }
-
-            degreeDeficit.set(i, d);
+        public int addDegree(Integer d) {
+            totalDegreeDeficit += d;
+            degreeDeficit.add(d);
+            return degreeDeficit.size()-1;
         }
+/*
+        public void updateDegree(Integer i, Integer d) {
+            assert (degreeDeficit.size() > i);
+            totalDegreeDeficit += d - degreeDeficit.get(i);
+            degreeDeficit.set(i, d);
+        }*/
 
         public void decrease(Integer position) {
             degreeDeficit.set(position, degreeDeficit.get(position)-1);
@@ -76,8 +77,9 @@ public class DEGGenerator implements Generator {
         int position = 0;
         for (int degree : degreeSubSequence) {
             Vertex v = g.addVertex(position); // POTENTIAL ISSUE: We assume that the graph library (always) uses 'position' as vertex id
-            degreeDeficit.setDegree(position, degree);
-            g.addVertex(position);
+            int realPosition = degreeDeficit.addDegree(degree); // this will go from 0 to ...
+            assert(realPosition == position);
+            position++;
         }
 
         int loopIterations = 0;
