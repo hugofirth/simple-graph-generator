@@ -100,6 +100,7 @@ public class SimpleGenerator implements Generator {
                 }
             }
 
+            // TODO we need a better stopping condition
 
             // handle the case when no local optimum is found
             if (!newOptFound) {
