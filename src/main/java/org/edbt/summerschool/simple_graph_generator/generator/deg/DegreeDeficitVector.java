@@ -17,6 +17,10 @@ public class DegreeDeficitVector {
         return degreeDeficit.size()-1;
     }
 
+    public int getDegree(Integer position) {
+        return degreeDeficit.get(position);
+    }
+
     public int update(Integer position, Integer d) {
         totalDegreeDeficit += d - degreeDeficit.get(position);
         degreeDeficit.set(position, d);
@@ -53,8 +57,17 @@ public class DegreeDeficitVector {
     }
 
     public DegreeDeficitVector clone() {
-        DegreeDeficitVector clone = this.clone();
-        clone.degreeDeficit = (ArrayList<Integer>) this.degreeDeficit.clone();
+        DegreeDeficitVector clone = new DegreeDeficitVector();
+        clone.degreeDeficit = new ArrayList<Integer>(this.degreeDeficit);
+        clone.totalDegreeDeficit = this.totalDegreeDeficit;
         return clone;
+    }
+
+    public void testPrint() {
+        System.out.print("deficit: ");
+        for (Integer degree : degreeDeficit) {
+            System.out.print(Integer.toString(degree) + " ");
+        }
+        System.out.println();
     }
 }
