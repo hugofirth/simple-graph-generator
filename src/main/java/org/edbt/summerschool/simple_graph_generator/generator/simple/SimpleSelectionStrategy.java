@@ -18,7 +18,7 @@ import static org.edbt.summerschool.simple_graph_generator.graph.GraphMethods.ed
  */
 public class SimpleSelectionStrategy implements SelectionStrategy {
     @Override
-    public Iterable<Set<Vertex>> getCandidateIterable(Graph g) {
+    public Iterable<Set<Vertex>> getCandidateIterable(Graph g, int numTriangles) {
 
         // IMPROVE filter vertices
 

@@ -127,7 +127,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>uk.ac.ncl.prov.start.JettyLauncher</mainClass>
+                            <mainClass>org.edbt.summerschool.simple_graph_generator.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

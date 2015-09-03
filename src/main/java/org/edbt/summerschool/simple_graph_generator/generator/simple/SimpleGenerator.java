@@ -76,7 +76,7 @@ public class SimpleGenerator implements Generator {
             printDeficits(g);
 
             // selection strategy
-            Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g);
+            Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g, 0);
             System.out.println(candidates);
 
             boolean newOptFound = false;
