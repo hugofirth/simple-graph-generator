@@ -124,7 +124,7 @@ public class SimpleGenerator implements Generator {
 
         for (Vertex v : candidateSet) {
             for (Vertex w : candidateSet) {
-                if (!v.equals(w)) {
+                if ((int)v.getProperty("position") < (int)w.getProperty("position")) {
                    addEdgeAndUpdateDeficit(v,w);
                 }
             }
@@ -142,6 +142,21 @@ public class SimpleGenerator implements Generator {
         w.setProperty("degreeDeficit", (int) w.getProperty("degreeDeficit") - 1);
 
         return e;
+    }
+
+    private void removeEdgeAndUpdateDeficit(Graph g, Edge e) {
+
+
+        Vertex v = e.getVertex(Direction.IN);
+        Vertex w = e.getVertex(Direction.OUT);
+
+        // create new edge
+        g.removeEdge(e);
+
+        // update the degree deficit
+        v.setProperty("degreeDeficit", (int) v.getProperty("degreeDeficit") + 1);
+        w.setProperty("degreeDeficit", (int) w.getProperty("degreeDeficit") + 1);
+
     }
 
     /**
@@ -166,7 +181,7 @@ public class SimpleGenerator implements Generator {
             for (Vertex w : candidateSet) {
 
                 // check if its a new edge
-                if (v.equals(w) || edgeExists(v,w)) {
+                if (edgeExists(v,w) || (int)v.getProperty("position") >= (int)w.getProperty("position")) {
                    break;
                 }
                     // calculate the number of new triangles
@@ -193,7 +208,7 @@ public class SimpleGenerator implements Generator {
 
         // restore graph
         for (Edge e : temporaryEdges) {
-            g.removeEdge(e);
+            removeEdgeAndUpdateDeficit(g,e);
         }
 
         // update the optimisation vector
