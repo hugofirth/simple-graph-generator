@@ -24,10 +24,10 @@ public class TriangleSelectionStrategy implements SelectionStrategy {
         // IMPROVE filter vertices
 
 
-        // get vertices that have a deficit
+        // get vertices that have a deficit of more than 1
         Set<Vertex> allVertices = new HashSet<>();
         for (Vertex v: g.getVertices()) {
-            if ((int)v.getProperty("degreeDeficit") > 0) {
+            if ((int)v.getProperty("degreeDeficit") > 1) {
                 allVertices.add(v);
             }
         }
@@ -49,6 +49,34 @@ public class TriangleSelectionStrategy implements SelectionStrategy {
                 }
             }
         }
+
+        // get vertices that have a deficit of 1
+        Set<Vertex> allVertices2 = new HashSet<>();
+        for (Vertex v: g.getVertices()) {
+            if ((int)v.getProperty("degreeDeficit") == 1) {
+                allVertices.add(v);
+            }
+        }
+
+        for (Vertex v : allVertices2) {
+            for (Vertex w : allVertices) {
+                if (v.equals(w) || edgeExists(v,w))
+                    break;
+                Set<Vertex> set = new HashSet<>();
+                set.add(v);
+                set.add(w);
+                candidates.add(set);
+            }
+            for (Vertex w : allVertices2) {
+                if (v.equals(w) || edgeExists(v,w))
+                    break;
+                Set<Vertex> set = new HashSet<>();
+                set.add(v);
+                set.add(w);
+                candidates.add(set);
+            }
+        }
+
 
         return candidates;
     }

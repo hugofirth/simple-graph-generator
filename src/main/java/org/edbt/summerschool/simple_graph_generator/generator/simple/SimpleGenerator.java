@@ -36,7 +36,7 @@ public class SimpleGenerator implements Generator {
     public SimpleGenerator(Iterable<Integer> degreeSubSequence, int numTriangles) {
         this.degreeSubSequence = degreeSubSequence;
         this.numTriangles = numTriangles;
-        this.selectionStrategy = new SimpleSelectionStrategy();
+        this.selectionStrategy = new TriangleSelectionStrategy();
     }
 
     public void setSelectionStrategy(SelectionStrategy selectionStrategy) {
@@ -250,8 +250,8 @@ public class SimpleGenerator implements Generator {
 
         // update the optimisation vector
         OptimisationVector opt = new OptimisationVector(o.getTriangleUpperLimit(),o.getUnfinishedVerticesUpperLimit(),o.getNumTrianglesLeft() - newTriangles, o.getUnfinishedVertices() - finished, o.getEdgesLeft() - edgesAdded, o.getEdgeDistance()+ distance);
-//        System.out.println("Prev Vector: " + o);
-//        System.out.println("New Vector: "+ opt);
+        System.out.println("Prev Vector: " + o);
+        System.out.println("New Vector: "+ opt);
         return opt;
     }
 
