@@ -138,8 +138,8 @@ public class SimpleGenerator implements Generator {
         Edge e = v.addEdge("",w);
 
         // update the degree deficit
-        v.setProperty("degreeDeficit", (int)v.getProperty("degreeDeficit") - 1);
-        w.setProperty("degreeDeficit",(int)w.getProperty("degreeDeficit") - 1);
+        v.setProperty("degreeDeficit", (int) v.getProperty("degreeDeficit") - 1);
+        w.setProperty("degreeDeficit", (int) w.getProperty("degreeDeficit") - 1);
 
         return e;
     }
