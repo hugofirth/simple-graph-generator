@@ -32,7 +32,7 @@ import java.util.*;
  *
  * @author hugofirth
  */
-public class DegreeFirstSelectionStrategy implements SelectionStrategy {
+public final class DegreeFirstSelectionStrategy implements SelectionStrategy {
     @Override
     public Iterable<Set<Vertex>> getCandidateIterable(Graph g) {
         List<Vertex> vertices = new ArrayList<>();
