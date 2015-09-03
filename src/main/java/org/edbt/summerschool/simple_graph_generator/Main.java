@@ -126,6 +126,10 @@ public class Main {
                     {
                         result = workThread.submit(StrategyFactory.createStrategy(Strategies.EXISTING_STRATEGY, degreeSeq, ccoeff));
                     }
+                    else if(commandLine.getOptionValue("strategy").equals("deg2"))
+                    {
+                        result = workThread.submit(StrategyFactory.createStrategy(Strategies.EXISTING_STRATEGY_B, degreeSeq, ccoeff));
+                    }
                     else if(commandLine.getOptionValue("strategy").equals("greedy_corecursive"))
                     {
                         result = workThread.submit(StrategyFactory.createStrategy(Strategies.CONCURRENT, degreeSeq, ccoeff));

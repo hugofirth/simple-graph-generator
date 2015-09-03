@@ -7,12 +7,12 @@ import org.edbt.summerschool.simple_graph_generator.generator.Strategy;
  * This class implements the strategy as described in the Masters' thesis of Nidhi Parikh
  * entitled "Generating Random Graphs with Tunable Clustering Coefficient".
  */
-public class ImprovedDEGStrategy implements Strategy {
+public class AdaptedDEGStrategy implements Strategy {
 
     private Iterable<Integer> degreeSequence;
     private double clusteringCoefficient;
 
-    public ImprovedDEGStrategy(Iterable<Integer> degreeSequence, double clusteringCoefficient) {
+    public AdaptedDEGStrategy(Iterable<Integer> degreeSequence, double clusteringCoefficient) {
         this.degreeSequence = degreeSequence;
         this.clusteringCoefficient = clusteringCoefficient;
     }
@@ -20,6 +20,6 @@ public class ImprovedDEGStrategy implements Strategy {
     @Override
     public Graph call() throws Exception {
         int numTriangles = Strategy.numTriangles(degreeSequence, clusteringCoefficient);
-        return new ImprovedDEGGenerator(degreeSequence, numTriangles).call();
+        return new AdaptedDEGGenerator(degreeSequence, numTriangles).call();
     }
 }

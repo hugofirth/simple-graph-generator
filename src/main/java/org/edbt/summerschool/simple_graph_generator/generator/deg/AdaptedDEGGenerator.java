@@ -17,13 +17,13 @@ import java.util.Set;
  * This class implements the generator as described in the Masters' thesis of Nidhi Parikh
  * entitled "Generating Random Graphs with Tunable Clustering Coefficient".
  */
-public class ImprovedDEGGenerator implements Generator {
+public class AdaptedDEGGenerator implements Generator {
 
     private Iterable<Integer> degreeSubSequence;
     private int numTriangles;
     final int MAX_NUM_OF_TRIES = 20;
 
-    public ImprovedDEGGenerator(Iterable<Integer> degreeSubSequence, int numTriangles) {
+    public AdaptedDEGGenerator(Iterable<Integer> degreeSubSequence, int numTriangles) {
         this.degreeSubSequence = degreeSubSequence;
         this.numTriangles = numTriangles;
     }
