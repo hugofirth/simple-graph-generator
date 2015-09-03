@@ -20,7 +20,7 @@ public interface SelectionStrategy {
      * @param g the current graph
      * @return a stream of vertex sets to be tried
      */
-    public Iterable<Set<Vertex>> getCandidateIterable(Graph g);
+    public Iterable<Set<Vertex>> getCandidateIterable(Graph g, int numTriangles);
 
     /**
      * Handles the case when no candidate is accepted.
