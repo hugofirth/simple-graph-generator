@@ -66,14 +66,17 @@ public class SimpleGenerator implements Generator {
         }
 
 
-        OptimisationVector optVector = new OptimisationVector((int)(numTriangles*0.05),(int)(position*0.05),numTriangles,unfinishedNodes,0);
+        OptimisationVector optVector = new OptimisationVector((int)(numTriangles*0.05),(int)(position*0.05),numTriangles,unfinishedNodes,totalDegreeDeficit,0);
         while (!minimalDegreeDeficit) {
 
+            System.out.println("---");
             OptimisationVector bestOpt = new OptimisationVector(optVector);
-//            System.out.println("vector: " + optVector);
+            System.out.println("vector: " + optVector);
+            printDeficits(g);
 
             // selection strategy
-            Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g);
+            Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g, 0);
+            System.out.println(candidates);
 
             boolean newOptFound = false;
             Set<Vertex> optCandidates = new HashSet<>();
@@ -98,6 +101,8 @@ public class SimpleGenerator implements Generator {
                 }
             }
 
+            // TODO we need a better stopping condition
+
             // handle the case when no local optimum is found
             if (!newOptFound) {
                 minimalDegreeDeficit = selectionStrategy.handleNoOptimalFound(g, optVector);
@@ -113,6 +118,13 @@ public class SimpleGenerator implements Generator {
         return g;
     }
 
+    private void printDeficits(Graph g) {
+        for (Vertex v : g.getVertices()) {
+            System.out.print((int)v.getProperty("degreeDeficit") + " ");
+        }
+        System.out.println();
+    }
+
     /**
      * Creates the set of all edges between the given vertices.
      * @param candidateSet
@@ -121,19 +133,28 @@ public class SimpleGenerator implements Generator {
     private void createEdges(Set<Vertex> candidateSet) {
 
 
-        System.out.println("creating edges between: " + candidateSet);
+//        System.out.println("creating edges between: " + candidateSet);
 
         for (Vertex v : candidateSet) {
             for (Vertex w : candidateSet) {
-                if ((int)v.getProperty("position") < (int)w.getProperty("position")) {
                    addEdgeAndUpdateDeficit(v,w);
-                }
+
             }
         }
 
     }
 
     private Edge addEdgeAndUpdateDeficit(Vertex v, Vertex w) {
+
+
+        if ((int)v.getProperty("position") > (int)w.getProperty("position")) {
+            Vertex help = v;
+            v = w;
+            w = help;
+        }
+
+        if (edgeExists(v,w) || (int)v.getProperty("position") == (int)w.getProperty("position"))
+            return null;
 
         // create new edge
         Edge e = v.addEdge("",w);
@@ -150,6 +171,13 @@ public class SimpleGenerator implements Generator {
 
         Vertex v = e.getVertex(Direction.IN);
         Vertex w = e.getVertex(Direction.OUT);
+
+
+        if ((int)v.getProperty("position") >= (int)w.getProperty("position")) {
+            Vertex help = v;
+            v = w;
+            w = help;
+        }
 
         // create new edge
         g.removeEdge(e);
@@ -175,33 +203,39 @@ public class SimpleGenerator implements Generator {
         int newTriangles = 0;
         int distance = 0;
         int finished = 0;
+        int edgesAdded = 0;
         Set<Edge> temporaryEdges = new HashSet<>();
 
         // add each edge
         for (Vertex v : candidateSet) {
             for (Vertex w : candidateSet) {
 
-                // check if its a new edge
+                // check if its a new edge and nodes are in right order and different
                 if (edgeExists(v,w) || (int)v.getProperty("position") >= (int)w.getProperty("position")) {
-                   break;
+                   continue;
                 }
-                    // calculate the number of new triangles
-                    newTriangles += calculateOpenTriangles(v, w);
 
-                    // add edge
-                    Edge e = addEdgeAndUpdateDeficit(v,w);
-                    temporaryEdges.add(e);
+                int vDef = (int)v.getProperty("degreeDeficit");
+                int wDef = (int)w.getProperty("degreeDeficit");
+
+                // calculate the number of new triangles
+                newTriangles += calculateOpenTriangles(v, w);
+
+                // add edge
+                Edge e = addEdgeAndUpdateDeficit(v,w);
+                edgesAdded++;
+                temporaryEdges.add(e);
 
 
-                    // FIXME check if these nodes are done
-                    if ((int)v.getProperty("degreeDeficit") == 0)
-                        finished++;
+                // FIXME check if these nodes are done
+                if ((int)v.getProperty("degreeDeficit") == 0 && vDef > 0)
+                    finished++;
 
-                    if ((int)w.getProperty("degreeDeficit") == 0)
-                        finished++;
+                if ((int)w.getProperty("degreeDeficit") == 0 && wDef > 0)
+                    finished++;
 
-                    // add new distance
-                    distance += Math.abs((int)v.getProperty("position") - (int)w.getProperty("position"));
+                // add new distance
+                distance += Math.abs((int)v.getProperty("position") - (int)w.getProperty("position"));
 
 
             }
@@ -213,7 +247,7 @@ public class SimpleGenerator implements Generator {
         }
 
         // update the optimisation vector
-        OptimisationVector opt = new OptimisationVector(o.getTriangleUpperLimit(),o.getUnfinishedVerticesUpperLimit(),o.getNumTrianglesLeft() - newTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance);
+        OptimisationVector opt = new OptimisationVector(o.getTriangleUpperLimit(),o.getUnfinishedVerticesUpperLimit(),o.getNumTrianglesLeft() - newTriangles, o.getUnfinishedVertices() - finished, o.getEdgesLeft() - edgesAdded, o.getEdgeDistance()+ distance);
 //        System.out.println("Prev Vector: " + o);
 //        System.out.println("New Vector: "+ opt);
         return opt;
@@ -222,7 +256,8 @@ public class SimpleGenerator implements Generator {
 
 
     /**
-     * Calculates how many open triangles end in given vertices
+     * Calculates how many open triangles end in the given vertices.
+     *
      * @param v first edge endpoint
      * @param w second edge endpoint
      * @return the number of open triangles ending in the given vertices

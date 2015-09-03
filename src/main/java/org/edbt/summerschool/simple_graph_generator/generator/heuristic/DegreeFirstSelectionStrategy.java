@@ -34,20 +34,22 @@ import java.util.*;
  */
 public final class DegreeFirstSelectionStrategy implements SelectionStrategy {
     @Override
-    public Iterable<Set<Vertex>> getCandidateIterable(Graph g) {
+    public Iterable<Set<Vertex>> getCandidateIterable(Graph g, int numTriangles) {
         List<Vertex> vertices = new ArrayList<>();
 
         int degreeSum = 0;
+        int numVertices = 0;
 
         for(Vertex v : g.getVertices()) {
             vertices.add(v);
             degreeSum += (int) v.getProperty("degreeDeficit");
+            numVertices++;
         }
 
         Collections.sort(vertices, (Vertex l, Vertex r) -> {
-            Integer lDefecit = l.getProperty("degreeDeficit");
+            Integer lDeficit = l.getProperty("degreeDeficit");
             Integer rDeficit = r.getProperty("degreeDeficit");
-            return lDefecit.compareTo(rDeficit);
+            return lDeficit.compareTo(rDeficit);
         });
 
         //Potential loss of precision is not a problem as degree sum *MUST* be even
@@ -56,12 +58,22 @@ public final class DegreeFirstSelectionStrategy implements SelectionStrategy {
         int edgesCreated = 0;
 
         List<Set<Vertex>> edgeCandidates = new ArrayList<>();
+        List<Integer> potentialTriangles = new ArrayList<>();
+        //Initialise potentialTriangles datastructure full of 0s
+        for(int i = 0; i<numVertices; i++){
+            potentialTriangles.add(0);
+        }
 
         //Iterate the sorted vertices
         for(int i = 0; i<vertices.size(); i++){
             int degreeDeficit = vertices.get(i).getProperty("degreeDeficit");
-            for(int j = 1; j<=degreeDeficit; j++){
-                ImmutableSet<Vertex> potentialEdge = ImmutableSet.of(vertices.get(i), vertices.get(i+j));
+
+            for(int j = 2; j<=degreeDeficit; j++){
+                potentialTriangles.set(i+j, 1);
+            }
+
+            for(int k = 1; k<=degreeDeficit; k++){
+                ImmutableSet<Vertex> potentialEdge = ImmutableSet.of(vertices.get(i), vertices.get(i+k));
                 edgeCandidates.add(potentialEdge);
             }
         }
