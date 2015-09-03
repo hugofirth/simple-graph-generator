@@ -69,7 +69,7 @@ public class GreedyGenerator implements Generator {
         }
 
 
-        for(Set<Vertex> candidateEdge: selectionStrategy.getCandidateIterable(g)){
+        for(Set<Vertex> candidateEdge: selectionStrategy.getCandidateIterable(g, 0)){
             //TODO: Use OptimisationVector to track improvement, but not to make any decisions (I think)
             //TODO: Modify selection strategy to take a required number of Triangles so that it can actually target a given CC
             createEdge(candidateEdge);

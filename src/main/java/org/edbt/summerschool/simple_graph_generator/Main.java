@@ -30,8 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+
 
 /**
  * Main class constitutes the entry point to the program
@@ -192,7 +191,7 @@ public class Main {
         optionsMap.put("clustering",
                 new Option("c", "clustering", true, "The required clustering coefficient for the generated graph."));
         optionsMap.put("strategy",
-                new Option("s", "strategy", false, "The strategy to be used to generate the graph. Options include " +
+                new Option("s", "strategy", true, "The strategy to be used to generate the graph. Options include " +
                         "\"simple\", \"deg\" and \"greedy_corecursive\""));
 
         final Options options = new Options();
@@ -235,7 +234,7 @@ public class Main {
         final String header =
                 "[ Thanks for using the Simple Graph Generator: a tool for generating graphs which conform to a given " +
                         "degree sequence and clustering coefficient. ]\n[ Created by Jonny Daenen, Hugo Firth & Bas " +
-                        "Ketsman and licensed under the GNU Affero General Public License, version 3. ]";
+                        "Ketsman and licensed under the Apache License, version 2.0 ]";
         try
         {
             out.write(header.getBytes());
