@@ -1,8 +1,9 @@
-package org.edbt.summerschool.simple_graph_generator.generator;
+package org.edbt.summerschool.simple_graph_generator.generator.deg;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
+import org.edbt.summerschool.simple_graph_generator.generator.Generator;
 import org.edbt.summerschool.simple_graph_generator.graph.GraphMethods;
 
 import java.util.ArrayList;
@@ -17,21 +18,23 @@ public class DEGGenerator implements Generator {
 
     private Iterable<Integer> degreeSubSequence;
     private int numTriangles;
+    final int MAX_LOOP_ITERATIONS = 20;
 
     private class DegreeDeficitVector {
         private ArrayList<Integer> degreeDeficit = new ArrayList<>();
         private Integer totalDegreeDeficit = 0;
 
-        public void setDegree(Integer i, Integer d) {
-            Integer old = degreeDeficit.get(i);
-            if (old == null) {
-                totalDegreeDeficit += d;
-            } else {
-                totalDegreeDeficit += d - old;
-            }
-
-            degreeDeficit.set(i, d);
+        public int addDegree(Integer d) {
+            totalDegreeDeficit += d;
+            degreeDeficit.add(d);
+            return degreeDeficit.size()-1;
         }
+/*
+        public void updateDegree(Integer i, Integer d) {
+            assert (degreeDeficit.size() > i);
+            totalDegreeDeficit += d - degreeDeficit.get(i);
+            degreeDeficit.set(i, d);
+        }*/
 
         public void decrease(Integer position) {
             degreeDeficit.set(position, degreeDeficit.get(position)-1);
@@ -44,15 +47,19 @@ public class DEGGenerator implements Generator {
         public Integer randomNodePosition() {
             Random randomGenerator = new Random();
             int randomInt = randomGenerator.nextInt(totalDegreeDeficit()); // TODO: check if range is as desired?
-
+            System.out.print("Randomint:" + Integer.toString(randomInt));
             int prefixSum = 0;
             int position = 0;
             Integer returnPosition = null;
             for (Integer degree : degreeDeficit) {
-                if (prefixSum < randomInt && randomInt <= prefixSum + degree); // TODO: check if this is a desired
-                returnPosition = new Integer(position);
+                if (prefixSum < randomInt && randomInt <= prefixSum + degree) // TODO: check if this is a desired
+                    returnPosition = new Integer(position);
                 prefixSum += degree;
                 position ++;
+            }
+            if (returnPosition != null) {
+                System.out.print(" | returnPosition: " + Integer.toString(returnPosition));
+                System.out.println(" | degree of position: " + Integer.toString(degreeDeficit.get(returnPosition)));
             }
 
             return returnPosition;
@@ -73,18 +80,21 @@ public class DEGGenerator implements Generator {
 
         int position = 0;
         for (int degree : degreeSubSequence) {
-            Vertex v = g.addVertex(position); // WARNING: I assume that the graph library (always) uses 'position' as vertex id
-            degreeDeficit.setDegree(position, degree);
-            g.addVertex(position);
+            Vertex v = g.addVertex(position); // POTENTIAL ISSUE: We assume that the graph library (always) uses 'position' as vertex id
+            int realPosition = degreeDeficit.addDegree(degree); // this will go from 0 to ...
+            assert(realPosition == position);
+            position++;
         }
 
-        while (numTriangles > 0 && degreeDeficit.totalDegreeDeficit() > 1) {
+        int loopIterations = 0;
+        while (numTriangles > 0 && degreeDeficit.totalDegreeDeficit() > 1 && loopIterations < MAX_LOOP_ITERATIONS) {
+            loopIterations++;
             Integer a = degreeDeficit.randomNodePosition();
             Integer b = degreeDeficit.randomNodePosition();
             Integer c = degreeDeficit.randomNodePosition();
 
-            if (a.equals(b) || b.equals(c) || a.equals(c)) {
-                continue; // TODO: potential infinite loop!!!
+            if (a == null || b == null || c == null || a.equals(b) || b.equals(c) || a.equals(c)) {
+                continue;
             }
 
             Vertex vertexA = g.getVertex(a);
@@ -110,12 +120,14 @@ public class DEGGenerator implements Generator {
             numTriangles -= 1;
         }
 
-        while (degreeDeficit.totalDegreeDeficit() > 1) {
+        loopIterations = 0;
+        while (degreeDeficit.totalDegreeDeficit() > 1 && loopIterations < MAX_LOOP_ITERATIONS) {
+            loopIterations++;
             Integer a = degreeDeficit.randomNodePosition();
             Integer b = degreeDeficit.randomNodePosition();
 
             if (a == null || b == null) {
-                continue; // TODO: potential infinite loop
+                continue;
             }
 
             Vertex vertexA = g.getVertex(a);

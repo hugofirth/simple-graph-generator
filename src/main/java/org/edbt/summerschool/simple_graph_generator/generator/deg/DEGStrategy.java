@@ -1,6 +1,8 @@
-package org.edbt.summerschool.simple_graph_generator.generator;
+package org.edbt.summerschool.simple_graph_generator.generator.deg;
 
 import com.tinkerpop.blueprints.Graph;
+import org.edbt.summerschool.simple_graph_generator.generator.Strategy;
+import org.edbt.summerschool.simple_graph_generator.generator.deg.DEGGenerator;
 
 /**
  * This class implements the strategy as described in the Masters' thesis of Nidhi Parikh
