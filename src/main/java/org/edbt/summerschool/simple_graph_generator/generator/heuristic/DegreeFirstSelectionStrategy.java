@@ -20,6 +20,7 @@ package org.edbt.summerschool.simple_graph_generator.generator.heuristic;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
+import org.edbt.summerschool.simple_graph_generator.generator.OptimisationVector;
 import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
 
 
@@ -39,7 +40,7 @@ public class DegreeFirstSelectionStrategy implements SelectionStrategy {
 
         for(Vertex v : g.getVertices()) {
             vertices.add(v);
-            degreeSum += v.getProperty("degreeDeficit");
+            degreeSum += (int) v.getProperty("degreeDeficit");
         }
 
         Collections.sort(vertices, (Vertex l, Vertex r) -> {
@@ -69,6 +70,11 @@ public class DegreeFirstSelectionStrategy implements SelectionStrategy {
         //TODO: Think about triangle counting and skipping elements in the degreeSequence. This should be a way to keep triangles down.
 
         return edgeCandidates;
+    }
+
+    @Override
+    public boolean handleNoOptimalFound(Graph g, OptimisationVector optVector) {
+        return false;
     }
 }
 

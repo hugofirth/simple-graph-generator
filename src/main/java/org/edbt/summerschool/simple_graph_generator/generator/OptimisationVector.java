@@ -24,6 +24,14 @@ public class OptimisationVector implements Comparable<OptimisationVector> {
         this.edgeDistance = edgeDistance;
     }
 
+    public OptimisationVector(OptimisationVector optVector) {
+        this.triangleUpperLimit = optVector.triangleUpperLimit;
+        this.unfinishedVerticesUpperLimit = optVector.unfinishedVerticesUpperLimit;
+        this.numTrianglesLeft = optVector.numTrianglesLeft;
+        this.unfinishedVertices = optVector.unfinishedVertices;
+        this.edgeDistance = optVector.edgeDistance;
+    }
+
     public int getTriangleUpperLimit() {
         return triangleUpperLimit;
     }
@@ -106,5 +114,16 @@ public class OptimisationVector implements Comparable<OptimisationVector> {
             return edgeDistance - o.edgeDistance;
 
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "OptimisationVector{" +
+                "triangleUpperLimit=" + triangleUpperLimit +
+                ", unfinishedVerticesUpperLimit=" + unfinishedVerticesUpperLimit +
+                ", numTrianglesLeft=" + numTrianglesLeft +
+                ", unfinishedVertices=" + unfinishedVertices +
+                ", edgeDistance=" + edgeDistance +
+                '}';
     }
 }

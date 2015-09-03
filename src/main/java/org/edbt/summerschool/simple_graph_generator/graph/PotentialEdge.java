@@ -83,9 +83,10 @@ public class PotentialEdge implements Set<Vertex> {
     @Override
     public <T> T[] toArray(T[] a) {
         if(a.length >= 2)
+            ;
             //TODO Finish implementing this!
 
-        return new T[];
+        return null;
     }
 
     @Override

@@ -27,7 +27,7 @@ public interface SelectionStrategy {
      *
      * @param g the current graph
      * @param optVector the optimisation vector of the graph
-     * @return whether to continue with constructing the graph
+     * @return true iff generator needs to stop
      */
     public boolean handleNoOptimalFound(Graph g, OptimisationVector optVector);
 }
