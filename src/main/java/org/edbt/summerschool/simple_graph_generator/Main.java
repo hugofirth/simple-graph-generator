@@ -103,8 +103,13 @@ public class Main {
             {
                 //TODO: Read in the degreeSequence (naively initially) dump in an iterable and pass to Strategy
 
+                int [] seq = new int [100];
+                for (int i = 0; i < 100; i++)
+                    seq[i] = (int)(Math.random()*50);
 
-                int [] seq = {1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2};
+//                int [] seq = {1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2,1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2,1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2,1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2,1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2,1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2};
+
+//                int [] seq = {1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2};
 //                int [] seq = {11,11,11,11,11,11,11,11,11,11,11,11};
                 Iterable<Integer> seqList = Ints.asList(seq);
                 displayBlankLines(1, System.out);

@@ -9,6 +9,8 @@ import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import org.edbt.summerschool.simple_graph_generator.generator.Generator;
 import org.edbt.summerschool.simple_graph_generator.generator.OptimisationVector;
 import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
+import org.edbt.summerschool.simple_graph_generator.generator.heuristic.MaxSelectionStrategy;
+import org.edbt.summerschool.simple_graph_generator.generator.heuristic.TriangleSelectionStrategy;
 
 import java.util.HashSet;
 import java.util.Set;
