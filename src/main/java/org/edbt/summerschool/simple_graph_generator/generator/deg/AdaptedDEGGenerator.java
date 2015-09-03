@@ -38,7 +38,7 @@ public class AdaptedDEGGenerator implements Generator {
 
         int position = 0;
         for (int degree : degreeSubSequence) {
-            Vertex v = g.addVertex(position); // We assume that the graph library (always) uses 'position' as vertex id
+            Vertex v = g.addVertex(new Integer(position)); // We assume that the graph library (always) uses 'position' as vertex id
             int realPosition = degreeDeficit.addDegree(degree);
             assert(realPosition == position);
             position++;
@@ -48,19 +48,27 @@ public class AdaptedDEGGenerator implements Generator {
         int loopIterations = 0;
         while (numTriangles > 0 && !nothingToAdd && loopIterations < MAX_NUM_OF_TRIES) {
             Integer a = degreeDeficit.randomNodePosition();
+            degreeDeficit.testPrint();
             if (a != null) {
+                System.out.println("a:" + Integer.toString(a));
+
                 Vertex vertexA = g.getVertex(a);
 
                 // create copy of degreeDeficit in which all neighbours of a, including a itself get degree 0
                 DegreeDeficitVector tmpA = degreeDeficit.clone();
                 tmpA.update(a, 0);
                 for (Vertex neighbor : vertexA.getVertices(Direction.BOTH)) {
-                    tmpA.update((int) neighbor.getId(), 0);
+                    System.out.println((String) neighbor.getId());
+                    tmpA.update((Integer) neighbor.getId(), 0);
                 }
+                tmpA.testPrint();
+
 
                 Integer b = tmpA.randomNodePosition();
                 if (b != null) {
-                    Vertex vertexB = g.getVertex(a);
+                    System.out.println("b:" + Integer.toString(b));
+
+                    Vertex vertexB = g.getVertex(b);
 
                     Set<Vertex> intersectionAB = GraphMethods.neighborIntersection(vertexA, vertexB);
                     if (intersectionAB.size() > 0) {
@@ -76,36 +84,54 @@ public class AdaptedDEGGenerator implements Generator {
                         }
                     } else { // intersection is empty
                         DegreeDeficitVector tmpB = tmpA.clone();
-                        tmpB.update(a, 0);
+                        tmpB.update(b, 0);
+                        tmpB.testPrint();
 
                         Integer c = tmpB.randomNodePosition();
                         if (c != null) {
+                            System.out.println("c:" + Integer.toString(c));
+
                             Vertex vertexC = g.getVertex(c);
 
-                            int numberOfNewTriangles = GraphMethods.neighborIntersection(vertexA, vertexC).size() +
-                                    GraphMethods.neighborIntersection(vertexB, vertexC).size() + 1;
+                            int needsABEdge = GraphMethods.edgeExists(vertexA, vertexB)? 0 : 1;
+                            int needsACEdge = GraphMethods.edgeExists(vertexA, vertexC)? 0 : 1;
+                            int needsBCEdge = GraphMethods.edgeExists(vertexB, vertexC)? 0 : 1;
+
+                            int numberOfNewTriangles = (GraphMethods.neighborIntersection(vertexA, vertexC).size()*(needsACEdge == 0? 1 : 0)) +
+                                    (GraphMethods.neighborIntersection(vertexB, vertexC).size()*(needsBCEdge == 0? 1 : 0)) + 1;
+                            System.out.println("New triangles:" + Integer.toString(numberOfNewTriangles));
                             if (numTriangles - numberOfNewTriangles < 0) {
                                 loopIterations++;
                                 continue;
                             } else {
-                                numTriangles -= numberOfNewTriangles;
 
-                                if (!GraphMethods.edgeExists(vertexA, vertexB)) {
-                                    degreeDeficit.decrease(a);
-                                    degreeDeficit.decrease(b);
-                                    vertexA.addEdge("", vertexB);
+
+
+                                if (degreeDeficit.getDegree(a) >= needsABEdge+needsACEdge
+                                        && degreeDeficit.getDegree(b) >= needsABEdge+needsBCEdge
+                                        && degreeDeficit.getDegree(c) >= needsBCEdge+needsACEdge) {
+                                    numTriangles -= numberOfNewTriangles;
+
+                                    if (needsABEdge == 1) {
+                                        degreeDeficit.decrease(a);
+                                        degreeDeficit.decrease(b);
+                                        vertexA.addEdge("", vertexB);
+                                    }
+                                    if (needsBCEdge == 1) {
+                                        degreeDeficit.decrease(b);
+                                        degreeDeficit.decrease(c);
+                                        vertexB.addEdge("", vertexC);
+                                    }
+                                    if (needsACEdge == 1) {
+                                        degreeDeficit.decrease(a);
+                                        degreeDeficit.decrease(c);
+                                        vertexA.addEdge("", vertexC);
+                                    }
+                                    loopIterations = 0;
+                                } else {
+                                    loopIterations++;
+                                    continue;
                                 }
-                                if (!GraphMethods.edgeExists(vertexB, vertexC)) {
-                                    degreeDeficit.decrease(b);
-                                    degreeDeficit.decrease(c);
-                                    vertexB.addEdge("", vertexC);
-                                }
-                                if (!GraphMethods.edgeExists(vertexA, vertexC)) {
-                                    degreeDeficit.decrease(a);
-                                    degreeDeficit.decrease(c);
-                                    vertexA.addEdge("", vertexC);
-                                }
-                                loopIterations = 0;
                             }
                         } else {
                             nothingToAdd = true;

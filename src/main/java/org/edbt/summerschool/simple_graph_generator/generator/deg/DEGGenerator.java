@@ -81,7 +81,7 @@ public class DEGGenerator implements Generator {
             Integer a = degreeDeficit.randomNodePosition();
             Integer b = degreeDeficit.randomNodePosition();
 
-            if (a == null || b == null) {
+            if (a == null || b == null || a.equals(b)) {
                 loopIterations++;
                 continue;
             }
