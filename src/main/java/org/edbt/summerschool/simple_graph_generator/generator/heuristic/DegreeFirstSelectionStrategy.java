@@ -18,8 +18,10 @@
  */
 package org.edbt.summerschool.simple_graph_generator.generator.heuristic;
 
+import com.google.common.collect.ImmutableSet;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
+import org.edbt.summerschool.simple_graph_generator.generator.OptimisationVector;
 import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
 
 
@@ -59,9 +61,7 @@ public class DegreeFirstSelectionStrategy implements SelectionStrategy {
         for(int i = 0; i<vertices.size(); i++){
             int degreeDeficit = vertices.get(i).getProperty("degreeDeficit");
             for(int j = 1; j<=degreeDeficit; j++){
-                Set<Vertex> potentialEdge = new HashSet<>();
-                potentialEdge.add(vertices.get(i));
-                potentialEdge.add(vertices.get(i+j));
+                ImmutableSet<Vertex> potentialEdge = ImmutableSet.of(vertices.get(i), vertices.get(i+j));
                 edgeCandidates.add(potentialEdge);
             }
         }
@@ -69,6 +69,12 @@ public class DegreeFirstSelectionStrategy implements SelectionStrategy {
         //TODO: Think about triangle counting and skipping elements in the degreeSequence. This should be a way to keep triangles down.
 
         return edgeCandidates;
+    }
+
+    @Override
+    public boolean handleNoOptimalFound(Graph g, OptimisationVector optVector) {
+        //Not necessary to use.
+        return false;
     }
 }
 
