@@ -9,7 +9,7 @@ package org.edbt.summerschool.simple_graph_generator.generator;
  */
 public class OptimisationVector implements Comparable<OptimisationVector> {
 
-    int triangleUpperLimit;
+    int triangleUpperLimit; // number of triangles that can be left
     int unfinishedVerticesUpperLimit;
 
     int numTrianglesLeft;
@@ -85,8 +85,8 @@ public class OptimisationVector implements Comparable<OptimisationVector> {
     @Override
     public int compareTo(OptimisationVector o) {
 
-        boolean tLimit1Exceeded = (numTrianglesLeft > triangleUpperLimit);
-        boolean tLimit2Exceeded = (o.numTrianglesLeft > o.triangleUpperLimit);
+        boolean tLimit1Exceeded = (numTrianglesLeft > triangleUpperLimit) || (numTrianglesLeft < -triangleUpperLimit);
+        boolean tLimit2Exceeded = (o.numTrianglesLeft > o.triangleUpperLimit) || (o.numTrianglesLeft < -o.triangleUpperLimit);
         // if only one exceeds the limit, return the other one
         if (!tLimit1Exceeded && tLimit2Exceeded)
             return -1;
