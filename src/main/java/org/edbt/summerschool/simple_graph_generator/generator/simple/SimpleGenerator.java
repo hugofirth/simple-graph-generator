@@ -9,6 +9,7 @@ import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import org.edbt.summerschool.simple_graph_generator.generator.Generator;
 import org.edbt.summerschool.simple_graph_generator.generator.OptimisationVector;
 import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
+import org.edbt.summerschool.simple_graph_generator.graph.GraphMethods;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -227,10 +228,10 @@ public class SimpleGenerator implements Generator {
      * @return the number of open triangles ending in the given vertices
      */
     private int calculateOpenTriangles(Vertex v, Vertex w) {
-
+        return GraphMethods.neighborIntersection(v, w).size();
+    /* old
         Iterable<Vertex> neighborsV = v.getVertices(Direction.BOTH);
         Iterable<Vertex> neighborsW = w.getVertices(Direction.BOTH);
-
 
         HashSet<Vertex> setV = new HashSet<>();
         for (Vertex neighbor : neighborsV)
@@ -242,6 +243,7 @@ public class SimpleGenerator implements Generator {
 
         setV.retainAll(setW);
         return setV.size();
+        /*/
     }
 
     private boolean optimisationOverThreshold(OptimisationVector vector) {

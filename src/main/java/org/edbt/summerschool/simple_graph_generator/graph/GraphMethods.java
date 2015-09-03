@@ -3,6 +3,9 @@ package org.edbt.summerschool.simple_graph_generator.graph;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Vertex;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by jonny on 02/09/15.
  */
@@ -25,4 +28,15 @@ public class GraphMethods {
     }
 
 
+    public static Set<Vertex> neighborIntersection(Vertex v, Vertex w) {
+        Iterable<Vertex> neighborsV = v.getVertices(Direction.BOTH);
+        Iterable<Vertex> neighborsW = w.getVertices(Direction.BOTH);
+
+        HashSet<Vertex> set = new HashSet<>();
+        for (Vertex neighbor : neighborsV)
+            set.add(neighbor);
+        for (Vertex neighbor : neighborsW)
+            set.add(neighbor);
+        return set;
+    }
 }
