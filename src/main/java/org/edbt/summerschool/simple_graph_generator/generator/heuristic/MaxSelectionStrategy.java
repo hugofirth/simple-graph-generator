@@ -19,7 +19,7 @@ import static org.edbt.summerschool.simple_graph_generator.graph.GraphMethods.ed
  */
 public class MaxSelectionStrategy implements SelectionStrategy {
     @Override
-    public Iterable<Set<Vertex>> getCandidateIterable(Graph g) {
+    public Iterable<Set<Vertex>> getCandidateIterable(Graph g, int numTriangles) {
 
 
         int max1 = 0;

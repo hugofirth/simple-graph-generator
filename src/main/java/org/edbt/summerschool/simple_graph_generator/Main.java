@@ -19,7 +19,6 @@
 package org.edbt.summerschool.simple_graph_generator;
 
 import com.google.common.primitives.Ints;
-import com.sun.tools.javac.util.List;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.util.io.graphml.GraphMLWriter;
 import org.apache.commons.cli.*;
@@ -27,10 +26,11 @@ import org.edbt.summerschool.simple_graph_generator.generator.Strategies;
 import org.edbt.summerschool.simple_graph_generator.generator.StrategyFactory;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.concurrent.*;
+
 
 /**
  * Main class constitutes the entry point to the program
@@ -101,17 +101,47 @@ public class Main {
             }
             else
             {
-                //TODO: Read in the degreeSequence (naively initially) dump in an iterable and pass to Strategy
+                List<String> degreeLines = Files.readAllLines(Paths.get(commandLine.getOptionValue("input")));
+                Iterable<Integer> degreeSeq = degreeLines.stream().map(n -> Integer.valueOf(n))::iterator;
 
+                //TEST
+                int [] seq = {1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2};
 
-                //int [] seq = {1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2};
-//                int [] seq = {11,11,11,11,11,11,11,11,11,11,11,11};
-//                Iterable<Integer> seqList = Ints.asList(seq);
-//                displayBlankLines(1, System.out);
+                degreeSeq = Ints.asList(seq);
+                //\TEST
+
+                displayBlankLines(1, System.out);
 
                 Double ccoeff = Double.parseDouble(commandLine.getOptionValue("clustering"));
 
-                Future<Graph> result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE, seqList, ccoeff));
+                //Choose the strategy and run
+                Future<Graph> result;
+                if(commandLine.hasOption('s') || commandLine.hasOption("strategy"))
+                {
+                    if(commandLine.getOptionValue("strategy").equals("simple"))
+                    {
+                        result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE, degreeSeq, ccoeff));
+                    }
+                    else if(commandLine.getOptionValue("strategy").equals("deg"))
+                    {
+                        result = workThread.submit(StrategyFactory.createStrategy(Strategies.EXISTING_STRATEGY, degreeSeq, ccoeff));
+                    }
+                    else if(commandLine.getOptionValue("strategy").equals("greedy_corecursive"))
+                    {
+                        result = workThread.submit(StrategyFactory.createStrategy(Strategies.CONCURRENT, degreeSeq, ccoeff));
+                    }
+                    else
+                    {
+                        result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE, degreeSeq, ccoeff));
+                    }
+
+                }
+                else
+                {
+                    result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE, degreeSeq, ccoeff));
+                }
+
+
                 long startTime = System.currentTimeMillis();
                 while(!result.isDone())
                 {
@@ -123,10 +153,8 @@ public class Main {
 
                 Graph generated = result.get();
                 System.out.println(generated.toString());
-                //TODO: Write generated out to a file using an accepted format.
                 displayBlankLines(2, System.out);
-                OutputStream out = new FileOutputStream(new File(commandLine.getOptionValue("destination")));
-
+                OutputStream out = Files.newOutputStream(Paths.get(commandLine.getOptionValue("destination")));
                 GraphMLWriter.outputGraph(generated, out);
                 System.out.println("[ Success! Took: "+elapsedTime+" ms in total]");
             }
@@ -137,7 +165,7 @@ public class Main {
             System.exit(1);
         }
         //TODO: replace with more specific Exceptions
-        catch(Exception e)
+        catch(InterruptedException | ExecutionException | IOException e)
         {
             e.printStackTrace();
             System.err.println("Encountered a problem generating the graph:\n"+e.toString());
@@ -162,6 +190,9 @@ public class Main {
                 new Option("d", "destination", true, "The desired destination for the generated graph file."));
         optionsMap.put("clustering",
                 new Option("c", "clustering", true, "The required clustering coefficient for the generated graph."));
+        optionsMap.put("strategy",
+                new Option("s", "strategy", true, "The strategy to be used to generate the graph. Options include " +
+                        "\"simple\", \"deg\" and \"greedy_corecursive\""));
 
         final Options options = new Options();
         for(Option o : optionsMap.values())
@@ -203,7 +234,7 @@ public class Main {
         final String header =
                 "[ Thanks for using the Simple Graph Generator: a tool for generating graphs which conform to a given " +
                         "degree sequence and clustering coefficient. ]\n[ Created by Jonny Daenen, Hugo Firth & Bas " +
-                        "Ketsman and licensed under the GNU Affero General Public License, version 3. ]";
+                        "Ketsman and licensed under the Apache License, version 2.0 ]";
         try
         {
             out.write(header.getBytes());

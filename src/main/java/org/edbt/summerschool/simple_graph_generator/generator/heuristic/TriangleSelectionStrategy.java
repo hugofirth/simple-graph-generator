@@ -19,7 +19,7 @@ import static org.edbt.summerschool.simple_graph_generator.graph.GraphMethods.ed
  */
 public class TriangleSelectionStrategy implements SelectionStrategy {
     @Override
-    public Iterable<Set<Vertex>> getCandidateIterable(Graph g) {
+    public Iterable<Set<Vertex>> getCandidateIterable(Graph g, int numTriangles) {
 
         // IMPROVE filter vertices
 
@@ -52,6 +52,7 @@ public class TriangleSelectionStrategy implements SelectionStrategy {
 
         return candidates;
     }
+
 
     @Override
     public boolean handleNoOptimalFound(Graph g, OptimisationVector optVector) {
