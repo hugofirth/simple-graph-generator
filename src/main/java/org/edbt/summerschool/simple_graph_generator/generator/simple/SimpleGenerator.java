@@ -73,6 +73,7 @@ public class SimpleGenerator implements Generator {
 
             // selection strategy
             Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g);
+            System.out.println(candidates);
 
             boolean newOptFound = false;
             Set<Vertex> optCandidates = new HashSet<>();
@@ -82,7 +83,7 @@ public class SimpleGenerator implements Generator {
                 OptimisationVector newVector = considerEdges(g, optVector, candidateSet);
 
                 // keep best vector
-                if (newVector.compareTo(bestOpt) < 0) {
+                if (newVector.compareTo(bestOpt) < 0 || !newOptFound) {
                     bestOpt = newVector;
                     optCandidates = candidateSet;
                     newOptFound = true;
@@ -169,7 +170,7 @@ public class SimpleGenerator implements Generator {
      */
     private OptimisationVector considerEdges(Graph g, OptimisationVector o, Set<Vertex> candidateSet) {
 
-//        System.out.println("Considering edges between: " + candidateSet);
+        System.out.println("Considering edges between: " + candidateSet);
 
         int newTriangles = 0;
         int distance = 0;
@@ -180,9 +181,9 @@ public class SimpleGenerator implements Generator {
         for (Vertex v : candidateSet) {
             for (Vertex w : candidateSet) {
 
-                // check if its a new edge
+                // check if its a new edge and nodes are in right order and different
                 if (edgeExists(v,w) || (int)v.getProperty("position") >= (int)w.getProperty("position")) {
-                   break;
+                   continue;
                 }
                     // calculate the number of new triangles
                     newTriangles += calculateOpenTriangles(v, w);
@@ -213,8 +214,8 @@ public class SimpleGenerator implements Generator {
 
         // update the optimisation vector
         OptimisationVector opt = new OptimisationVector(o.getTriangleUpperLimit(),o.getUnfinishedVerticesUpperLimit(),o.getNumTrianglesLeft() - newTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance);
-//        System.out.println("Prev Vector: " + o);
-//        System.out.println("New Vector: "+ opt);
+        System.out.println("Prev Vector: " + o);
+        System.out.println("New Vector: "+ opt);
         return opt;
     }
 

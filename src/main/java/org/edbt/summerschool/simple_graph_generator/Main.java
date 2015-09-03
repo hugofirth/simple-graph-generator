@@ -122,6 +122,7 @@ public class Main {
 
 
                 Graph generated = result.get();
+                System.out.println(generated.toString());
                 //TODO: Write generated out to a file using an accepted format.
                 displayBlankLines(2, System.out);
                 System.out.println("[ Success! Took: "+elapsedTime+" ms in total]");
