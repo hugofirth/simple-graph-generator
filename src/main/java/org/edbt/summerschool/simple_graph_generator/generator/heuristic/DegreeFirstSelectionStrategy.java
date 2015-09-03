@@ -41,7 +41,7 @@ public final class DegreeFirstSelectionStrategy implements SelectionStrategy {
 
         for(Vertex v : g.getVertices()) {
             vertices.add(v);
-            degreeSum += v.getProperty("degreeDeficit");
+            degreeSum += (int) v.getProperty("degreeDeficit");
         }
 
         Collections.sort(vertices, (Vertex l, Vertex r) -> {

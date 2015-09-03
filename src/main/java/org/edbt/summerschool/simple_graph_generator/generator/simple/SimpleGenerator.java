@@ -33,6 +33,11 @@ public class SimpleGenerator implements Generator {
     public SimpleGenerator(Iterable<Integer> degreeSubSequence, int numTriangles) {
         this.degreeSubSequence = degreeSubSequence;
         this.numTriangles = numTriangles;
+        this.selectionStrategy = new SimpleSelectionStrategy();
+    }
+
+    public void setSelectionStrategy(SelectionStrategy selectionStrategy) {
+        this.selectionStrategy = selectionStrategy;
     }
 
     @Override
@@ -62,6 +67,10 @@ public class SimpleGenerator implements Generator {
 
         OptimisationVector optVector = new OptimisationVector((int)(numTriangles*0.05),(int)(position*0.05),numTriangles,unfinishedNodes,0);
         while (!minimalDegreeDeficit) {
+
+            OptimisationVector bestOpt = new OptimisationVector(optVector);
+//            System.out.println("vector: " + optVector);
+
             // selection strategy
             Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g);
 
@@ -69,18 +78,19 @@ public class SimpleGenerator implements Generator {
             Set<Vertex> optCandidates = new HashSet<>();
 
             for (Set<Vertex> candidateSet : candidates) {
+
                 OptimisationVector newVector = considerEdges(g, optVector, candidateSet);
 
                 // keep best vector
-                if (newVector.compareTo(optVector) < 0) {
-                    optVector = newVector;
+                if (newVector.compareTo(bestOpt) < 0) {
+                    bestOpt = newVector;
                     optCandidates = candidateSet;
                     newOptFound = true;
                 }
 
                 // stop when condition is met
                 if (optimisationOverThreshold(newVector)) {
-                    optVector = newVector;
+                    bestOpt = newVector;
                     optCandidates = candidateSet;
                     newOptFound = true;
                     break;
@@ -91,12 +101,14 @@ public class SimpleGenerator implements Generator {
             if (!newOptFound) {
                 minimalDegreeDeficit = selectionStrategy.handleNoOptimalFound(g, optVector);
             } else {
-
+                optVector = bestOpt;
                 // actually connect vertices
                 createEdges(optCandidates);
             }
+
         }
 
+        System.out.println("vector: " + optVector);
         return g;
     }
 
@@ -107,9 +119,12 @@ public class SimpleGenerator implements Generator {
      */
     private void createEdges(Set<Vertex> candidateSet) {
 
+
+        System.out.println("creating edges between: " + candidateSet);
+
         for (Vertex v : candidateSet) {
             for (Vertex w : candidateSet) {
-                if (!v.equals(w)) {
+                if ((int)v.getProperty("position") < (int)w.getProperty("position")) {
                    addEdgeAndUpdateDeficit(v,w);
                 }
             }
@@ -129,6 +144,21 @@ public class SimpleGenerator implements Generator {
         return e;
     }
 
+    private void removeEdgeAndUpdateDeficit(Graph g, Edge e) {
+
+
+        Vertex v = e.getVertex(Direction.IN);
+        Vertex w = e.getVertex(Direction.OUT);
+
+        // create new edge
+        g.removeEdge(e);
+
+        // update the degree deficit
+        v.setProperty("degreeDeficit", (int) v.getProperty("degreeDeficit") + 1);
+        w.setProperty("degreeDeficit", (int) w.getProperty("degreeDeficit") + 1);
+
+    }
+
     /**
      * Calculate the effect of adding edges on the optimisation vector.
      * @param g the graph
@@ -139,6 +169,7 @@ public class SimpleGenerator implements Generator {
      */
     private OptimisationVector considerEdges(Graph g, OptimisationVector o, Set<Vertex> candidateSet) {
 
+//        System.out.println("Considering edges between: " + candidateSet);
 
         int newTriangles = 0;
         int distance = 0;
@@ -150,7 +181,7 @@ public class SimpleGenerator implements Generator {
             for (Vertex w : candidateSet) {
 
                 // check if its a new edge
-                if (v.equals(w) || edgeExists(v,w)) {
+                if (edgeExists(v,w) || (int)v.getProperty("position") >= (int)w.getProperty("position")) {
                    break;
                 }
                     // calculate the number of new triangles
@@ -158,10 +189,10 @@ public class SimpleGenerator implements Generator {
 
                     // add edge
                     Edge e = addEdgeAndUpdateDeficit(v,w);
-                temporaryEdges.add(e);
+                    temporaryEdges.add(e);
 
 
-                    // check if these nodes are done
+                    // FIXME check if these nodes are done
                     if ((int)v.getProperty("degreeDeficit") == 0)
                         finished++;
 
@@ -177,12 +208,14 @@ public class SimpleGenerator implements Generator {
 
         // restore graph
         for (Edge e : temporaryEdges) {
-            g.removeEdge(e);
+            removeEdgeAndUpdateDeficit(g,e);
         }
 
         // update the optimisation vector
-        return new OptimisationVector(o.getTriangleUpperLimit(),o.getUnfinishedVerticesUpperLimit(),o.getNumTrianglesLeft() - numTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance);
-
+        OptimisationVector opt = new OptimisationVector(o.getTriangleUpperLimit(),o.getUnfinishedVerticesUpperLimit(),o.getNumTrianglesLeft() - newTriangles, o.getUnfinishedVertices() - finished, o.getEdgeDistance()+ distance);
+//        System.out.println("Prev Vector: " + o);
+//        System.out.println("New Vector: "+ opt);
+        return opt;
     }
 
 

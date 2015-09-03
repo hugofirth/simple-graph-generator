@@ -18,6 +18,8 @@
  */
 package org.edbt.summerschool.simple_graph_generator;
 
+import com.google.common.primitives.Ints;
+import com.sun.tools.javac.util.List;
 import com.tinkerpop.blueprints.Graph;
 import org.apache.commons.cli.*;
 import org.edbt.summerschool.simple_graph_generator.generator.Strategies;
@@ -26,6 +28,7 @@ import org.edbt.summerschool.simple_graph_generator.generator.StrategyFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -101,11 +104,14 @@ public class Main {
             {
                 //TODO: Read in the degreeSequence (naively initially) dump in an iterable and pass to Strategy
 
+
+                int [] seq = {1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2};
+                Iterable<Integer> seqList = Ints.asList(seq);
                 displayBlankLines(1, System.out);
 
                 Double ccoeff = Double.parseDouble(commandLine.getOptionValue("clustering"));
 
-                Future<Graph> result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE, null, ccoeff));
+                Future<Graph> result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE, seqList, ccoeff));
                 long startTime = System.currentTimeMillis();
                 while(!result.isDone())
                 {
@@ -129,6 +135,7 @@ public class Main {
         //TODO: replace with more specific Exceptions
         catch(Exception e)
         {
+            e.printStackTrace();
             System.err.println("Encountered a problem generating the graph:\n"+e.toString());
             System.exit(1);
         }
