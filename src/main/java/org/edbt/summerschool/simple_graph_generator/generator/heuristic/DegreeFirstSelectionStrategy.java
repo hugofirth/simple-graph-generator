@@ -18,6 +18,7 @@
  */
 package org.edbt.summerschool.simple_graph_generator.generator.heuristic;
 
+import com.google.common.collect.ImmutableSet;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import org.edbt.summerschool.simple_graph_generator.generator.OptimisationVector;
@@ -40,7 +41,7 @@ public class DegreeFirstSelectionStrategy implements SelectionStrategy {
 
         for(Vertex v : g.getVertices()) {
             vertices.add(v);
-            degreeSum += (int) v.getProperty("degreeDeficit");
+            degreeSum += v.getProperty("degreeDeficit");
         }
 
         Collections.sort(vertices, (Vertex l, Vertex r) -> {
@@ -60,9 +61,7 @@ public class DegreeFirstSelectionStrategy implements SelectionStrategy {
         for(int i = 0; i<vertices.size(); i++){
             int degreeDeficit = vertices.get(i).getProperty("degreeDeficit");
             for(int j = 1; j<=degreeDeficit; j++){
-                Set<Vertex> potentialEdge = new HashSet<>();
-                potentialEdge.add(vertices.get(i));
-                potentialEdge.add(vertices.get(i+j));
+                ImmutableSet<Vertex> potentialEdge = ImmutableSet.of(vertices.get(i), vertices.get(i+j));
                 edgeCandidates.add(potentialEdge);
             }
         }
@@ -74,6 +73,7 @@ public class DegreeFirstSelectionStrategy implements SelectionStrategy {
 
     @Override
     public boolean handleNoOptimalFound(Graph g, OptimisationVector optVector) {
+        //Not necessary to use.
         return false;
     }
 }

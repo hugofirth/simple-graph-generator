@@ -217,11 +217,11 @@ public class SimpleGenerator implements Generator {
         Iterable<Vertex> neighborsW = w.getVertices(Direction.BOTH);
 
 
-        HashSet<Vertex> setV = new HashSet<Vertex>();
+        HashSet<Vertex> setV = new HashSet<>();
         for (Vertex neighbor : neighborsV)
             setV.add(neighbor);
 
-        HashSet<Vertex> setW = new HashSet<Vertex>();
+        HashSet<Vertex> setW = new HashSet<>();
         for (Vertex neighbor : neighborsW)
             setW.add(neighbor);
 
