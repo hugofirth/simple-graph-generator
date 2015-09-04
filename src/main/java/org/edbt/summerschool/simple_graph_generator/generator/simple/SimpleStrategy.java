@@ -19,6 +19,7 @@
 package org.edbt.summerschool.simple_graph_generator.generator.simple;
 
 import com.tinkerpop.blueprints.Graph;
+import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
 import org.edbt.summerschool.simple_graph_generator.generator.Strategy;
 
 /**
@@ -28,18 +29,27 @@ import org.edbt.summerschool.simple_graph_generator.generator.Strategy;
  */
 public class SimpleStrategy implements Strategy {
 
+    private final SelectionStrategy selectionStrategy;
     private Iterable<Integer> degreeSequence;
     private double clusteringCoefficient;
 
     public SimpleStrategy(Iterable<Integer> degreeSequence, double clusteringCoefficient) {
         this.degreeSequence = degreeSequence;
         this.clusteringCoefficient = clusteringCoefficient;
+        this.selectionStrategy = new SimpleSelectionStrategy();
+    }
+
+    public SimpleStrategy(Iterable<Integer> degreeSequence, double clusteringCoefficient, SelectionStrategy selectionStrategy) {
+        this.degreeSequence = degreeSequence;
+        this.clusteringCoefficient = clusteringCoefficient;
+        this.selectionStrategy = selectionStrategy;
     }
 
     @Override
     public Graph call() throws Exception {
         int numTriangles = Strategy.numTriangles(degreeSequence, clusteringCoefficient);
         System.out.println("Number of triangles required: " + numTriangles);
-        return new SimpleGenerator(degreeSequence, numTriangles).call();
+        SimpleGenerator generator = new SimpleGenerator(degreeSequence, numTriangles,selectionStrategy);
+        return generator.call();
     }
 }

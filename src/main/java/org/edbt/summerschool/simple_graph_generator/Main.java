@@ -122,6 +122,14 @@ public class Main {
                     {
                         result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE, degreeSeq, ccoeff));
                     }
+                    else if(commandLine.getOptionValue("strategy").equals("simple_triangle"))
+                    {
+                        result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE_TRIANGLE, degreeSeq, ccoeff));
+                    }
+                    else if(commandLine.getOptionValue("strategy").equals("simple_max"))
+                    {
+                        result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE_MAX, degreeSeq, ccoeff));
+                    }
                     else if(commandLine.getOptionValue("strategy").equals("deg"))
                     {
                         result = workThread.submit(StrategyFactory.createStrategy(Strategies.EXISTING_STRATEGY, degreeSeq, ccoeff));

@@ -26,7 +26,7 @@ public class AdaptedDEGGenerator extends SimpleGenerator implements Generator {
     final int MAX_NUM_OF_TRIES = 20;
 
     public AdaptedDEGGenerator(Iterable<Integer> degreeSubSequence, int numTriangles) {
-        super(null, 0);
+        super(null, 0, null);
 
         this.degreeSubSequence = degreeSubSequence;
         this.numTriangles = numTriangles;

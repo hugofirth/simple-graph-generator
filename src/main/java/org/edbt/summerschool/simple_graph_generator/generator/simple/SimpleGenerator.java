@@ -33,10 +33,10 @@ public class SimpleGenerator implements Generator {
     private SelectionStrategy selectionStrategy;
 
 
-    public SimpleGenerator(Iterable<Integer> degreeSubSequence, int numTriangles) {
+    public SimpleGenerator(Iterable<Integer> degreeSubSequence, int numTriangles, SelectionStrategy selectionStrategy) {
         this.degreeSubSequence = degreeSubSequence;
         this.numTriangles = numTriangles;
-        this.selectionStrategy = new SimpleSelectionStrategy();
+        this.selectionStrategy = selectionStrategy;
     }
 
     public void setSelectionStrategy(SelectionStrategy selectionStrategy) {

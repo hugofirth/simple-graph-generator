@@ -123,9 +123,9 @@ public class OptimisationVector implements Comparable<OptimisationVector> {
         boolean tbLimit2Exceeded = (o.numTrianglesLeft < -o.triangleUpperLimit);
 
         // if both exceed the bottom limit differently, return difference
-//        if (tbLimit1Exceeded && tbLimit2Exceeded && numTrianglesLeft - o.numTrianglesLeft != 0) {
-//            return -(numTrianglesLeft - o.numTrianglesLeft);
-//        }
+        if (tbLimit1Exceeded && tbLimit2Exceeded && numTrianglesLeft - o.numTrianglesLeft != 0) {
+            return -(numTrianglesLeft - o.numTrianglesLeft);
+        }
 
 
         boolean uvLimit1Exceeded = (unfinishedVertices > unfinishedVerticesUpperLimit);
