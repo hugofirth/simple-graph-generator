@@ -14,6 +14,7 @@ import org.edbt.summerschool.simple_graph_generator.generator.heuristic.MaxSelec
 import org.edbt.summerschool.simple_graph_generator.generator.heuristic.TriangleSelectionStrategy;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import static org.edbt.summerschool.simple_graph_generator.generator.Strategy.openTriangles;
@@ -118,9 +119,18 @@ public class SimpleGenerator implements Generator {
 
         }
 
+        LinkedList<Integer> newDegSeq = new LinkedList<>();
+        for (Vertex v : g.getVertices()) {
+            int i = 0;
+            for (Edge e : v.getEdges(Direction.BOTH)) {
+                i++;
+            }
+            newDegSeq.add(i);
+        }
+
         int sat_n = n - optVector.getUnfinishedVertices();
         int out_m = totalDegreeDeficit/2 - optVector.getEdgesLeft();
-        float out_cc = 3 * (numTriangles - optVector.getNumTrianglesLeft()) / (float) openTriangles(degreeSubSequence);
+        float out_cc = 3 * (numTriangles - optVector.getNumTrianglesLeft()) / (float) openTriangles(newDegSeq);
         int locality = optVector.getEdgeDistance();
 
         System.out.print(sat_n + ", " + out_m + ", " + out_cc + ", " + locality);
