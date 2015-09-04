@@ -158,13 +158,12 @@ public class Main {
                 while(!result.isDone())
                 {
                     System.out.print(".");
-                    Thread.sleep(1000);
+                    Thread.sleep(10);
                 }
                 long elapsedTime = System.currentTimeMillis()-startTime;
 
 
                 Graph generated = result.get();
-                System.out.println(generated.toString());
                 displayBlankLines(2, System.out);
                 OutputStream out = Files.newOutputStream(Paths.get(commandLine.getOptionValue("destination")));
                 GraphMLWriter.outputGraph(generated, out);

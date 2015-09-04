@@ -71,14 +71,14 @@ public class SimpleGenerator implements Generator {
         OptimisationVector optVector = new OptimisationVector((int)(numTriangles*0.05),(int)(position*0.05),numTriangles,unfinishedNodes,totalDegreeDeficit/2,0);
         while (!minimalDegreeDeficit) {
 
-            System.out.println("---");
+//            System.out.println("---");
             OptimisationVector bestOpt = new OptimisationVector(optVector);
-            System.out.println("vector: " + optVector);
-            printDeficits(g);
+//            System.out.println("vector: " + optVector);
+//            printDeficits(g);
 
             // selection strategy
             Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g, 0);
-            System.out.println(candidates);
+//            System.out.println(candidates);
 
             boolean newOptFound = false;
             Set<Vertex> optCandidates = new HashSet<>();
@@ -116,7 +116,7 @@ public class SimpleGenerator implements Generator {
 
         }
 
-        System.out.println("vector: " + optVector);
+//        System.out.println("vector: " + optVector);
         return g;
     }
 

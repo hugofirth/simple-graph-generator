@@ -48,7 +48,7 @@ public class SimpleStrategy implements Strategy {
     @Override
     public Graph call() throws Exception {
         int numTriangles = Strategy.numTriangles(degreeSequence, clusteringCoefficient);
-        System.out.println("Number of triangles required: " + numTriangles);
+//        System.out.println("Number of triangles required: " + numTriangles);
         SimpleGenerator generator = new SimpleGenerator(degreeSequence, numTriangles,selectionStrategy);
         return generator.call();
     }
