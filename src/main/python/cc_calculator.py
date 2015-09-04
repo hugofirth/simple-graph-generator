@@ -1,4 +1,5 @@
 import sys
+import os.path
 from networkx import *
 
 infilename = sys.argv[1]
@@ -9,7 +10,9 @@ outfile = open(outfilename,"w")
 
 lines = infile.readlines()
 
+
 for line in lines:
+    oldline = line
     #get properties
     line = line.split(",")
     id = line[0].strip()
@@ -22,17 +25,21 @@ for line in lines:
     # read graphml
     folder = "output_"+strategy
     filename = folder+ "/graph_%s_%s.graphml"%(id,cc)
-    G = Graph(read_graphml(filename))
+
+    if os.path.exists(filename):
+        G = Graph(read_graphml(filename))
     
     
-    # calculate cc
-    degree_sequence=list(degree(G).values())
-    cc = sum(nx.triangles(G).values())/float(sum(map(lambda x: x*(x-1)/2,degree_sequence)))
+        # calculate cc
+        degree_sequence=list(degree(G).values())
+        cc = sum(nx.triangles(G).values())
+        if cc > 0:
+            cc = cc / float(sum(map(lambda x: x*(x-1)/2,degree_sequence)))
     
-    # replace  $TODOCC
-    line.replace("$TODOCC", cc)
+        # replace  $TODOCC
+        oldline = oldline.replace("$TODOCC", str(cc))
     
     # write to output file
-    outfile.write(line)
+    outfile.write(oldline)
     
 outfile.close()
