@@ -42,7 +42,7 @@ public class MaxSelectionStrategy implements SelectionStrategy {
         Set<Vertex> allVertices = new HashSet<>();
 
         for (Vertex v: g.getVertices()) {
-            if ((int)v.getProperty("degreeDeficit") >= max4 && (int)v.getProperty("degreeDeficit") > 0) {
+            if ((int)v.getProperty("degreeDeficit") >= max3 && (int)v.getProperty("degreeDeficit") > 0) {
                 allVertices.add(v);
             }
         }
