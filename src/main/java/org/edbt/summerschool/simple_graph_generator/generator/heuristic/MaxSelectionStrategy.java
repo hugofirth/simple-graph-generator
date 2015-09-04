@@ -24,9 +24,13 @@ public class MaxSelectionStrategy implements SelectionStrategy {
 
         int max1 = 0;
         int max2 = 0;
+        int max3 = 0;
+        int max4 = 0;
         for (Vertex v: g.getVertices()) {
             int degree = (int)v.getProperty("degreeDeficit");
             if (degree > max1) {
+                max4 = max3;
+                max3 = max2;
                 max2 = max1;
                 max1 = degree;
             }
@@ -38,7 +42,7 @@ public class MaxSelectionStrategy implements SelectionStrategy {
         Set<Vertex> allVertices = new HashSet<>();
 
         for (Vertex v: g.getVertices()) {
-            if ((int)v.getProperty("degreeDeficit") >= max2 && (int)v.getProperty("degreeDeficit") > 0) {
+            if ((int)v.getProperty("degreeDeficit") >= max4 && (int)v.getProperty("degreeDeficit") > 0) {
                 allVertices.add(v);
             }
         }
@@ -50,7 +54,7 @@ public class MaxSelectionStrategy implements SelectionStrategy {
         for (Vertex v : allVertices) {
             for (Vertex w : allVertices) {
                 if (v.equals(w) || edgeExists(v,w))
-                    break;
+                    continue;
                 Set<Vertex> set = new HashSet<>();
                 set.add(v);
                 set.add(w);

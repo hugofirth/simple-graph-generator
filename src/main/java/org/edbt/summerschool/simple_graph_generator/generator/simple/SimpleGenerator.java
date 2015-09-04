@@ -132,10 +132,10 @@ public class SimpleGenerator implements Generator {
         int out_m = totalDegreeDeficit/2 - optVector.getEdgesLeft();
         int locality = optVector.getEdgeDistance();
 
-        System.out.print(sat_n + ", " + out_m + ", " + "$TODOCC" + ", " + locality);
+//        System.out.print(sat_n + ", " + out_m + ", " + "$TODOCC" + ", " + locality);
 
 
-//        System.out.println("vector: " + optVector);
+        System.out.println("vector: " + optVector);
 
 
         return g;

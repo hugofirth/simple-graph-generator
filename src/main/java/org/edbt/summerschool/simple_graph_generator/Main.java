@@ -160,20 +160,20 @@ public class Main {
                 long startTime = System.currentTimeMillis();
                 while(!result.isDone())
                 {
-                    if (System.currentTimeMillis() - startTime > 10000) {
+                    if (System.currentTimeMillis() - startTime > 600000) {
                         result.cancel(true);
                     }
-//                    System.out.print(".");
-                    Thread.sleep(20);
+                    System.out.print(".");
+                    Thread.sleep(100);
                 }
                 long elapsedTime = System.currentTimeMillis()-startTime;
                 //        id, method, req_cc,time
 
-                if (result.isCancelled()) {
-                    System.out.print("0, 0, 0, 0");
-                }
-                System.out.print("*out*" + commandLine.getOptionValue("strategy") + ", " + ccoeff + ", " + elapsedTime * 1000);
-                System.out.println();
+//                if (result.isCancelled()) {
+//                    System.out.print("0, 0, 0, 0");
+//                }
+//                System.out.print("*out*" + commandLine.getOptionValue("strategy") + ", " + ccoeff + ", " + elapsedTime * 1000);
+//                System.out.println();
 
                 Graph generated = result.get();
                 displayBlankLines(2, System.out);

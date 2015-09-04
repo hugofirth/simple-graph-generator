@@ -40,7 +40,7 @@ public class TriangleSelectionStrategy implements SelectionStrategy {
             for (Vertex w : allVertices) {
                 for (Vertex u : allVertices) {
                     if (v.equals(w) || u.equals(v) || v.equals(u) || (edgeExists(u, v) && edgeExists(v, w) && edgeExists(w, u)))
-                        break;
+                        continue;
                     Set<Vertex> set = new HashSet<>();
                     set.add(v);
                     set.add(w);
@@ -61,7 +61,7 @@ public class TriangleSelectionStrategy implements SelectionStrategy {
         for (Vertex v : allVertices2) {
             for (Vertex w : allVertices) {
                 if (v.equals(w) || edgeExists(v,w))
-                    break;
+                    continue;
                 Set<Vertex> set = new HashSet<>();
                 set.add(v);
                 set.add(w);
@@ -69,7 +69,7 @@ public class TriangleSelectionStrategy implements SelectionStrategy {
             }
             for (Vertex w : allVertices2) {
                 if (v.equals(w) || edgeExists(v,w))
-                    break;
+                    continue;
                 Set<Vertex> set = new HashSet<>();
                 set.add(v);
                 set.add(w);

@@ -38,7 +38,7 @@ public class SimpleSelectionStrategy implements SelectionStrategy {
         for (Vertex v : allVertices) {
             for (Vertex w : allVertices) {
                 if (v.equals(w) || edgeExists(v,w))
-                    break;
+                    continue;
                 Set<Vertex> set = new HashSet<>();
                 set.add(v);
                 set.add(w);
