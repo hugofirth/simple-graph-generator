@@ -102,12 +102,15 @@ public class Main {
             else
             {
                 List<String> degreeLines = Files.readAllLines(Paths.get(commandLine.getOptionValue("input")));
-                Iterable<Integer> degreeSeq = degreeLines.stream().map(n -> Integer.valueOf(n))::iterator;
+                LinkedList<Integer> degreeSeq = new LinkedList<>();//degreeLines.stream().map(n -> Integer.valueOf(n))::iterator;
+                for (String line : degreeLines) {
+                    degreeSeq.add(Integer.parseInt(line));
+                }
 
                 //TEST
-                int [] seq = {1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2};
+//                int [] seq = {1, 4, 4, 4, 4, 2, 1, 4, 1, 2, 2, 3, 1, 3, 2, 2, 2};
 
-                degreeSeq = Ints.asList(seq);
+//                degreeSeq = Ints.asList(seq);
                 //\TEST
 
                 displayBlankLines(1, System.out);
@@ -157,12 +160,19 @@ public class Main {
                 long startTime = System.currentTimeMillis();
                 while(!result.isDone())
                 {
+                    if (System.currentTimeMillis() - startTime > 10000) {
+                        result.cancel(true);
+                    }
 //                    System.out.print(".");
-                    Thread.sleep(10);
+                    Thread.sleep(20);
                 }
                 long elapsedTime = System.currentTimeMillis()-startTime;
                 //        id, method, req_cc,time
-                System.out.print("*out*" + commandLine.getOptionValue("strategy") + ", " + ccoeff + ", " + elapsedTime*1000);
+
+                if (result.isCancelled()) {
+                    System.out.print("0, 0, 0, 0");
+                }
+                System.out.print("*out*" + commandLine.getOptionValue("strategy") + ", " + ccoeff + ", " + elapsedTime * 1000);
                 System.out.println();
 
                 Graph generated = result.get();

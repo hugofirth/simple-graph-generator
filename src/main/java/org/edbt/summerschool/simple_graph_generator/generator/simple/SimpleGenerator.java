@@ -130,10 +130,9 @@ public class SimpleGenerator implements Generator {
 
         int sat_n = n - optVector.getUnfinishedVertices();
         int out_m = totalDegreeDeficit/2 - optVector.getEdgesLeft();
-        float out_cc = 3 * (numTriangles - optVector.getNumTrianglesLeft()) / (float) openTriangles(newDegSeq);
         int locality = optVector.getEdgeDistance();
 
-        System.out.print(sat_n + ", " + out_m + ", " + out_cc + ", " + locality);
+        System.out.print(sat_n + ", " + out_m + ", " + "$TODOCC" + ", " + locality);
 
 
 //        System.out.println("vector: " + optVector);
