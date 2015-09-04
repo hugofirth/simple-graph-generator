@@ -18,12 +18,9 @@
  */
 package org.edbt.summerschool.simple_graph_generator.generator.heuristic;
 
-
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.IndexableGraph;
 import com.tinkerpop.blueprints.Vertex;
-
 import org.edbt.summerschool.simple_graph_generator.generator.Generator;
 import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
 
@@ -35,36 +32,20 @@ import java.util.Set;
  *
  * @author hugofirth
  */
-public class GreedyGenerator implements Generator {
+public class MergingGenerator implements Generator {
 
-    private Iterable<Integer> degreeSubSequence;
-    private int numTriangles;
+    private Graph graph;
+
     private final SelectionStrategy selectionStrategy = new DegreeFirstSelectionStrategy();
-    private IndexableGraph graph;
 
-    public GreedyGenerator(Iterable<Integer> degreeSubSequence, int numTriangles, IndexableGraph graph) {
-        this.degreeSubSequence = degreeSubSequence;
-        this.numTriangles = numTriangles;
+    public MergingGenerator(Graph graph) {
         this.graph = graph;
     }
 
     @Override
     public Graph call() throws Exception {
-
-        graph.createIndex("unfinished", Vertex.class);
-
-        int position = 0;
-
-        for (int degree : degreeSubSequence) {
-
-            Vertex v = graph.addVertex(null);
-
-            v.setProperty("degreeDeficit", degree);
-            v.setProperty("position", position++);
-
-        }
-
-        for(Set<Vertex> candidateEdge: selectionStrategy.getCandidateIterable(graph, numTriangles)){
+        //In the merging strategy (at the moment) we don't want to create any more vertices.
+        for(Set<Vertex> candidateEdge: selectionStrategy.getCandidateIterable(graph, 0)){
             //TODO: Use OptimisationVector to track improvement, but not to make any decisions (I think)
             createEdge(candidateEdge);
         }

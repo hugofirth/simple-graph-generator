@@ -19,6 +19,7 @@
 package org.edbt.summerschool.simple_graph_generator.generator;
 
 import org.edbt.summerschool.simple_graph_generator.generator.deg.DEGStrategy;
+import org.edbt.summerschool.simple_graph_generator.generator.heuristic.WindowedStrategy;
 import org.edbt.summerschool.simple_graph_generator.generator.simple.SimpleStrategy;
 
 /**
@@ -36,11 +37,9 @@ public final class StrategyFactory {
                                           double clusteringCoefficient) {
 
         if(type == Strategies.CONCURRENT) {
-            //TODO: Implement the concurrent Strategy
-            throw new UnsupportedOperationException("The concurrent generator strategy has not been implemented yet!");
+            return new WindowedStrategy(degreeSequence, clusteringCoefficient);
         } else if (type == Strategies.EXISTING_STRATEGY ) {
             return new DEGStrategy(degreeSequence, clusteringCoefficient);
-
         } else {
             return new SimpleStrategy(degreeSequence, clusteringCoefficient);
         }

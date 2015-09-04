@@ -18,9 +18,11 @@
  */
 package org.edbt.summerschool.simple_graph_generator.generator.heuristic;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.*;
 import com.tinkerpop.blueprints.Graph;
+import com.tinkerpop.blueprints.Index;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import org.edbt.summerschool.simple_graph_generator.generator.OptimisationVector;
 import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
 
@@ -37,13 +39,8 @@ public final class DegreeFirstSelectionStrategy implements SelectionStrategy {
     public Iterable<Set<Vertex>> getCandidateIterable(Graph g, int numTriangles) {
         List<Vertex> vertices = new ArrayList<>();
 
-        int degreeSum = 0;
-        int numVertices = 0;
-
         for(Vertex v : g.getVertices()) {
             vertices.add(v);
-            degreeSum += (int) v.getProperty("degreeDeficit");
-            numVertices++;
         }
 
         Collections.sort(vertices, (Vertex l, Vertex r) -> {
@@ -52,34 +49,37 @@ public final class DegreeFirstSelectionStrategy implements SelectionStrategy {
             return lDeficit.compareTo(rDeficit);
         });
 
-        //Potential loss of precision is not a problem as degree sum *MUST* be even
-        int numEdges = degreeSum/2;
-
-        int edgesCreated = 0;
+        int trianglesCreated = 0;
 
         List<Set<Vertex>> edgeCandidates = new ArrayList<>();
-        List<Integer> potentialTriangles = new ArrayList<>();
-        //Initialise potentialTriangles datastructure full of 0s
-        for(int i = 0; i<numVertices; i++){
-            potentialTriangles.add(0);
-        }
+        SetMultimap<Integer, Integer> edgesSoFar = HashMultimap.create();
 
         //Iterate the sorted vertices
         for(int i = 0; i<vertices.size(); i++){
             int degreeDeficit = vertices.get(i).getProperty("degreeDeficit");
+            int stepCount = degreeDeficit;
 
-            for(int j = 2; j<=degreeDeficit; j++){
-                potentialTriangles.set(i+j, 1);
-            }
+            for(int k = 1; k<=stepCount; k++){
+                if(i+k < vertices.size()) {
+                    int potentialTriangles = Sets.intersection(edgesSoFar.get(i), edgesSoFar.get(i + k)).size();
+                    int kDeficit = vertices.get(i + k).getProperty("degreeDeficit");
 
-            for(int k = 1; k<=degreeDeficit; k++){
-                ImmutableSet<Vertex> potentialEdge = ImmutableSet.of(vertices.get(i), vertices.get(i+k));
-                edgeCandidates.add(potentialEdge);
+                    if (kDeficit > 0 && (trianglesCreated + potentialTriangles < numTriangles)) {
+                        ImmutableSet<Vertex> potentialEdge = ImmutableSet.of(vertices.get(i), vertices.get(i + k));
+                        edgeCandidates.add(potentialEdge);
+                        edgesSoFar.put(i + k, i);
+                        vertices.get(i + k).setProperty("degreeDeficit", kDeficit - 1);
+                        vertices.get(i).setProperty("degreeDeficit", degreeDeficit - 1);
+                    } else stepCount++;
+                } else {
+                    //This is bad :'( . Time constraints - sorry
+                    Index<Vertex> idx = ((TinkerGraph) g).getIndex("unfinished", Vertex.class);
+                    idx.put("unfinished", true, vertices.get(i));
+                    vertices.get(i).setProperty("unfinished", true);
+                }
             }
+            edgesSoFar.removeAll(i);
         }
-
-        //TODO: Think about triangle counting and skipping elements in the degreeSequence. This should be a way to keep triangles down.
-
         return edgeCandidates;
     }
 
