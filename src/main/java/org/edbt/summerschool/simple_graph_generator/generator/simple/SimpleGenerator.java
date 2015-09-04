@@ -132,7 +132,7 @@ public class SimpleGenerator implements Generator {
      * @param candidateSet
      * @return
      */
-    private void createEdges(Set<Vertex> candidateSet) {
+    public void createEdges(Set<Vertex> candidateSet) {
 
 
 //        System.out.println("creating edges between: " + candidateSet);
@@ -198,7 +198,7 @@ public class SimpleGenerator implements Generator {
      *
      * @return the optimisation vector after adding edges
      */
-    private OptimisationVector considerEdges(Graph g, OptimisationVector o, Set<Vertex> candidateSet) {
+    public OptimisationVector considerEdges(Graph g, OptimisationVector o, Set<Vertex> candidateSet) {
 
 //        System.out.println("Considering edges between: " + candidateSet);
 
