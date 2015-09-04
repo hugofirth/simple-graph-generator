@@ -5,22 +5,24 @@ infilename = sys.argv[1]
 outfilename = sys.argv[2]
 
 infile = open(infilename)
-outfile
+outfile = open(outfilename,"w")
 
-
+lines = infile.readlines()
 
 for line in lines:
     #get properties
-    line.split(",")
-    id = line[0].trim()
-    strategy = line[1].trim()
-    cc = line[2].trim()
+    line = line.split(",")
+    id = line[0].strip()
+    strategy = line[1].strip()
+    cc = line[2].strip()
+    if cc == "0.0":
+        cc = 0
     
     
     # read graphml
     folder = "output_"+strategy
     filename = folder+ "/graph_%s_%s.graphml"%(id,cc)
-    G = read_graphml(filename)
+    G = Graph(read_graphml(filename))
     
     
     # calculate cc
