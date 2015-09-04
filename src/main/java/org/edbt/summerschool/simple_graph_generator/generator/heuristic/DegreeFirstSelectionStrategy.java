@@ -35,6 +35,17 @@ import java.util.*;
  * @author hugofirth
  */
 public final class DegreeFirstSelectionStrategy implements SelectionStrategy {
+
+    public Index<Vertex> getUnfinishedIndex() {
+        return unfinished;
+    }
+
+    public void setUnfinishedIndex(Index<Vertex> unfinished) {
+        this.unfinished = unfinished;
+    }
+
+    private Index<Vertex> unfinished;
+
     @Override
     public Iterable<Set<Vertex>> getCandidateIterable(Graph g, int numTriangles) {
         List<Vertex> vertices = new ArrayList<>();
@@ -46,7 +57,7 @@ public final class DegreeFirstSelectionStrategy implements SelectionStrategy {
         Collections.sort(vertices, (Vertex l, Vertex r) -> {
             Integer lDeficit = l.getProperty("degreeDeficit");
             Integer rDeficit = r.getProperty("degreeDeficit");
-            return lDeficit.compareTo(rDeficit);
+            return rDeficit.compareTo(lDeficit);
         });
 
         int trianglesCreated = 0;
@@ -64,17 +75,16 @@ public final class DegreeFirstSelectionStrategy implements SelectionStrategy {
                     int potentialTriangles = Sets.intersection(edgesSoFar.get(i), edgesSoFar.get(i + k)).size();
                     int kDeficit = vertices.get(i + k).getProperty("degreeDeficit");
 
-                    if (kDeficit > 0 && (trianglesCreated + potentialTriangles < numTriangles)) {
+                    if (kDeficit > 0 && (trianglesCreated + potentialTriangles <= numTriangles)) {
                         ImmutableSet<Vertex> potentialEdge = ImmutableSet.of(vertices.get(i), vertices.get(i + k));
                         edgeCandidates.add(potentialEdge);
                         edgesSoFar.put(i + k, i);
                         vertices.get(i + k).setProperty("degreeDeficit", kDeficit - 1);
                         vertices.get(i).setProperty("degreeDeficit", degreeDeficit - 1);
                     } else stepCount++;
-                } else {
+                } else if(unfinished != null) {
                     //This is bad :'( . Time constraints - sorry
-                    Index<Vertex> idx = ((TinkerGraph) g).getIndex("unfinished", Vertex.class);
-                    idx.put("unfinished", true, vertices.get(i));
+                    unfinished.put("unfinished", true, vertices.get(i));
                     vertices.get(i).setProperty("unfinished", true);
                 }
             }
