@@ -16,8 +16,9 @@ import java.util.Set;
 
 
 /**
- * This class implements the generator as described in the Masters' thesis of Nidhi Parikh
+ * This class implements an adaptation of the the generator as described in the Masters' thesis of Nidhi Parikh
  * entitled "Generating Random Graphs with Tunable Clustering Coefficient".
+ * NOTICE: does not work at the moment
  */
 public class AdaptedDEGGenerator extends SimpleGenerator implements Generator {
 
