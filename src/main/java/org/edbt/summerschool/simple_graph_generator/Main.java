@@ -122,9 +122,21 @@ public class Main {
                     {
                         result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE, degreeSeq, ccoeff));
                     }
+                    else if(commandLine.getOptionValue("strategy").equals("simple_triangle"))
+                    {
+                        result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE_TRIANGLE, degreeSeq, ccoeff));
+                    }
+                    else if(commandLine.getOptionValue("strategy").equals("simple_max"))
+                    {
+                        result = workThread.submit(StrategyFactory.createStrategy(Strategies.SIMPLE_MAX, degreeSeq, ccoeff));
+                    }
                     else if(commandLine.getOptionValue("strategy").equals("deg"))
                     {
                         result = workThread.submit(StrategyFactory.createStrategy(Strategies.EXISTING_STRATEGY, degreeSeq, ccoeff));
+                    }
+                    else if(commandLine.getOptionValue("strategy").equals("deg2"))
+                    {
+                        result = workThread.submit(StrategyFactory.createStrategy(Strategies.EXISTING_STRATEGY_B, degreeSeq, ccoeff));
                     }
                     else if(commandLine.getOptionValue("strategy").equals("greedy_corecursive"))
                     {
@@ -145,14 +157,15 @@ public class Main {
                 long startTime = System.currentTimeMillis();
                 while(!result.isDone())
                 {
-                    System.out.print(".");
-                    Thread.sleep(1000);
+//                    System.out.print(".");
+                    Thread.sleep(10);
                 }
                 long elapsedTime = System.currentTimeMillis()-startTime;
-
+                //        id, method, req_cc,time
+                System.out.print("*out*" + commandLine.getOptionValue("strategy") + ", " + ccoeff + ", " + elapsedTime*1000);
+                System.out.println();
 
                 Graph generated = result.get();
-                System.out.println(generated.toString());
                 displayBlankLines(2, System.out);
                 OutputStream out = Files.newOutputStream(Paths.get(commandLine.getOptionValue("destination")));
                 GraphMLWriter.outputGraph(generated, out);

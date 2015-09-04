@@ -25,4 +25,17 @@ public interface Strategy extends Callable<Graph> {
         return (int)trianglesNeeded;
     }
 
+    static int openTriangles(Iterable<Integer> degreeSequence) {
+
+        double trianglesNeeded = 0;
+
+        // calculate open triangles when edge degree is satisfied
+        for (int degree : degreeSequence){
+            trianglesNeeded += degree * (degree-1) / 2;
+        }
+
+
+        return (int)trianglesNeeded;
+    }
+
 }

@@ -9,10 +9,15 @@ import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import org.edbt.summerschool.simple_graph_generator.generator.Generator;
 import org.edbt.summerschool.simple_graph_generator.generator.OptimisationVector;
 import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
+import org.edbt.summerschool.simple_graph_generator.graph.GraphMethods;
+import org.edbt.summerschool.simple_graph_generator.generator.heuristic.MaxSelectionStrategy;
+import org.edbt.summerschool.simple_graph_generator.generator.heuristic.TriangleSelectionStrategy;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
+import static org.edbt.summerschool.simple_graph_generator.generator.Strategy.openTriangles;
 import static org.edbt.summerschool.simple_graph_generator.graph.GraphMethods.edgeExists;
 
 
@@ -30,10 +35,10 @@ public class SimpleGenerator implements Generator {
     private SelectionStrategy selectionStrategy;
 
 
-    public SimpleGenerator(Iterable<Integer> degreeSubSequence, int numTriangles) {
+    public SimpleGenerator(Iterable<Integer> degreeSubSequence, int numTriangles, SelectionStrategy selectionStrategy) {
         this.degreeSubSequence = degreeSubSequence;
         this.numTriangles = numTriangles;
-        this.selectionStrategy = new SimpleSelectionStrategy();
+        this.selectionStrategy = selectionStrategy;
     }
 
     public void setSelectionStrategy(SelectionStrategy selectionStrategy) {
@@ -63,19 +68,20 @@ public class SimpleGenerator implements Generator {
             if (degree > 0)
                 unfinishedNodes++;
         }
+        int n = position;
+        int m = totalDegreeDeficit;
 
-
-        OptimisationVector optVector = new OptimisationVector((int)(numTriangles*0.05),(int)(position*0.05),numTriangles,unfinishedNodes,totalDegreeDeficit,0);
+        OptimisationVector optVector = new OptimisationVector((int)(numTriangles*0.05),(int)(position*0.05),numTriangles,unfinishedNodes,totalDegreeDeficit/2,0);
         while (!minimalDegreeDeficit) {
 
-            System.out.println("---");
+//            System.out.println("---");
             OptimisationVector bestOpt = new OptimisationVector(optVector);
-            System.out.println("vector: " + optVector);
-            printDeficits(g);
+//            System.out.println("vector: " + optVector);
+//            printDeficits(g);
 
             // selection strategy
             Iterable<Set<Vertex>> candidates = selectionStrategy.getCandidateIterable(g, 0);
-            System.out.println(candidates);
+//            System.out.println(candidates);
 
             boolean newOptFound = false;
             Set<Vertex> optCandidates = new HashSet<>();
@@ -113,7 +119,26 @@ public class SimpleGenerator implements Generator {
 
         }
 
-        System.out.println("vector: " + optVector);
+        LinkedList<Integer> newDegSeq = new LinkedList<>();
+        for (Vertex v : g.getVertices()) {
+            int i = 0;
+            for (Edge e : v.getEdges(Direction.BOTH)) {
+                i++;
+            }
+            newDegSeq.add(i);
+        }
+
+        int sat_n = n - optVector.getUnfinishedVertices();
+        int out_m = totalDegreeDeficit/2 - optVector.getEdgesLeft();
+        float out_cc = 3 * (numTriangles - optVector.getNumTrianglesLeft()) / (float) openTriangles(newDegSeq);
+        int locality = optVector.getEdgeDistance();
+
+        System.out.print(sat_n + ", " + out_m + ", " + out_cc + ", " + locality);
+
+
+//        System.out.println("vector: " + optVector);
+
+
         return g;
     }
 
@@ -129,7 +154,7 @@ public class SimpleGenerator implements Generator {
      * @param candidateSet
      * @return
      */
-    private void createEdges(Set<Vertex> candidateSet) {
+    public void createEdges(Set<Vertex> candidateSet) {
 
 
 //        System.out.println("creating edges between: " + candidateSet);
@@ -195,7 +220,7 @@ public class SimpleGenerator implements Generator {
      *
      * @return the optimisation vector after adding edges
      */
-    private OptimisationVector considerEdges(Graph g, OptimisationVector o, Set<Vertex> candidateSet) {
+    public OptimisationVector considerEdges(Graph g, OptimisationVector o, Set<Vertex> candidateSet) {
 
 //        System.out.println("Considering edges between: " + candidateSet);
 
@@ -262,10 +287,10 @@ public class SimpleGenerator implements Generator {
      * @return the number of open triangles ending in the given vertices
      */
     private int calculateOpenTriangles(Vertex v, Vertex w) {
-
+        return GraphMethods.neighborIntersection(v, w).size();
+    /* old
         Iterable<Vertex> neighborsV = v.getVertices(Direction.BOTH);
         Iterable<Vertex> neighborsW = w.getVertices(Direction.BOTH);
-
 
         HashSet<Vertex> setV = new HashSet<>();
         for (Vertex neighbor : neighborsV)
@@ -277,6 +302,7 @@ public class SimpleGenerator implements Generator {
 
         setV.retainAll(setW);
         return setV.size();
+        /*/
     }
 
     private boolean optimisationOverThreshold(OptimisationVector vector) {

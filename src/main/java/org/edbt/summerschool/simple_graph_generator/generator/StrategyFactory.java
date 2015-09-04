@@ -18,8 +18,11 @@
  */
 package org.edbt.summerschool.simple_graph_generator.generator;
 
+import org.edbt.summerschool.simple_graph_generator.generator.deg.AdaptedDEGStrategy;
 import org.edbt.summerschool.simple_graph_generator.generator.deg.DEGStrategy;
 import org.edbt.summerschool.simple_graph_generator.generator.heuristic.WindowedStrategy;
+import org.edbt.summerschool.simple_graph_generator.generator.heuristic.MaxSelectionStrategy;
+import org.edbt.summerschool.simple_graph_generator.generator.heuristic.TriangleSelectionStrategy;
 import org.edbt.summerschool.simple_graph_generator.generator.simple.SimpleStrategy;
 
 /**
@@ -40,6 +43,12 @@ public final class StrategyFactory {
             return new WindowedStrategy(degreeSequence, clusteringCoefficient);
         } else if (type == Strategies.EXISTING_STRATEGY ) {
             return new DEGStrategy(degreeSequence, clusteringCoefficient);
+        } else if (type == Strategies.EXISTING_STRATEGY_B ) {
+            return new AdaptedDEGStrategy(degreeSequence, clusteringCoefficient);
+        } else if (type == Strategies.SIMPLE_MAX ) {
+            return new SimpleStrategy(degreeSequence, clusteringCoefficient,new MaxSelectionStrategy());
+        } else if (type == Strategies.SIMPLE_TRIANGLE ) {
+            return new SimpleStrategy(degreeSequence, clusteringCoefficient,new TriangleSelectionStrategy());
         } else {
             return new SimpleStrategy(degreeSequence, clusteringCoefficient);
         }

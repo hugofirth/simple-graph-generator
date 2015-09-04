@@ -26,6 +26,8 @@ package org.edbt.summerschool.simple_graph_generator.generator;
 public enum Strategies {
     SIMPLE,
     CONCURRENT,
-    SIMPLE_EDGE_ADDITION,
-    EXISTING_STRATEGY
+    SIMPLE_MAX,
+    SIMPLE_TRIANGLE,
+    EXISTING_STRATEGY,
+    EXISTING_STRATEGY_B
 }

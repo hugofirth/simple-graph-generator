@@ -142,6 +142,30 @@
                 </executions>
             </plugin>
 
+
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>exec-maven-plugin</artifactId>-->
+                <!--<version>1.4.0</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>exec</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<executable>java</executable>-->
+                    <!--<arguments>-->
+                        <!--<argument>-classpath</argument>-->
+                        <!--&lt;!&ndash; automatically creates the classpath using all project dependencies,-->
+                             <!--also adding the project build directory &ndash;&gt;-->
+                        <!--<classpath/>-->
+                        <!--<argument>org.edbt.summerschool.simple_graph_generator.Main</argument>-->
+                    <!--</arguments>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+
         </plugins>
     </build>
 </project>
