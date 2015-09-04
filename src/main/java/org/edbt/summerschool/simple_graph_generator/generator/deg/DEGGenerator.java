@@ -108,7 +108,6 @@ public class DEGGenerator implements Generator {
             }
         }
 
-        // TODO:
         int sat_n = degreeDeficit.nmbrOfSatisfiedNodes();
         int out_m = degreeDeficit.totalDegreeDeficit()/2;
         //float out_cc = (float) 3 * (originalNumTriangles - numTriangles) / (float) Strategy.openTriangles( /*actual degreeSubSequence at the end*/); // actual number of triangles might be slightly higher
