@@ -85,6 +85,7 @@ public class WindowedStrategy implements Strategy {
         while(remainingFutures>0) {
             Future<Graph> resultFuture = completionService.take();
             generatedSubGraphs.add(resultFuture.get());
+            remainingFutures--;
         }
 
         //Phase 2
@@ -101,7 +102,7 @@ public class WindowedStrategy implements Strategy {
         for(Graph subGraph: generatedSubGraphs){
             for(Vertex v: subGraph.getVertices()){
                 Vertex parentVertex = parentGraph.addVertex(subGraphId+"-"+v.getId());
-                if((boolean) v.getProperty("unfinished")){
+                if(v.getPropertyKeys().contains("unfinished") && (boolean) v.getProperty("unfinished")){
                     unfinished.put("unfinished", true, parentVertex);
                     ElementHelper.copyProperties(v, parentVertex);
                 }
@@ -112,12 +113,14 @@ public class WindowedStrategy implements Strategy {
                 Vertex in = parentGraph.getVertex(subGraphId + "-" + e.getVertex(Direction.IN).getId());
                 parentGraph.addEdge(subGraphId+"-"+e.getId(), out, in, "");
             }
+            subGraphId++;
         }
 
         Iterable<Vertex> unfinishedVertex = unfinished.get("unfinished", true);
         Graph mergeGraph = new TinkerGraph();
         for(Vertex v: unfinishedVertex){
-            mergeGraph.addVertex(v.getId());
+            Vertex mergeV = mergeGraph.addVertex(v.getId());
+            ElementHelper.copyProperties(v, mergeV);
         }
         //Run merging Generator
         mergeGraph = new MergingGenerator(mergeGraph).call();

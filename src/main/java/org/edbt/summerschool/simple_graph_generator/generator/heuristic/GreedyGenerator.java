@@ -19,13 +19,9 @@
 package org.edbt.summerschool.simple_graph_generator.generator.heuristic;
 
 
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Graph;
-import com.tinkerpop.blueprints.IndexableGraph;
-import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.*;
 
 import org.edbt.summerschool.simple_graph_generator.generator.Generator;
-import org.edbt.summerschool.simple_graph_generator.generator.SelectionStrategy;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -39,7 +35,7 @@ public class GreedyGenerator implements Generator {
 
     private Iterable<Integer> degreeSubSequence;
     private int numTriangles;
-    private final SelectionStrategy selectionStrategy = new DegreeFirstSelectionStrategy();
+    private final DegreeFirstSelectionStrategy selectionStrategy = new DegreeFirstSelectionStrategy();
     private IndexableGraph graph;
 
     public GreedyGenerator(Iterable<Integer> degreeSubSequence, int numTriangles, IndexableGraph graph) {
@@ -51,7 +47,8 @@ public class GreedyGenerator implements Generator {
     @Override
     public Graph call() throws Exception {
 
-        graph.createIndex("unfinished", Vertex.class);
+        Index<Vertex> unfinished = graph.createIndex("unfinished", Vertex.class);
+        selectionStrategy.setUnfinishedIndex(unfinished);
 
         int position = 0;
 

@@ -33,3 +33,10 @@ buildNumber.properties
 Icon?
 ehthumbs.db
 Thumbs.db
+
+data/
+output/
+stats_johuba_java.csv
+stats_johuba_max.csv
+stats_johuba_simple.csv
+stats_johuba_triangle.csv
