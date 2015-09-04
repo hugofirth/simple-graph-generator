@@ -43,25 +43,35 @@ public class DegreeDeficitVector {
 
     public Integer randomNodePosition() {
         Random randomGenerator = new Random();
-        int randomInt = randomGenerator.nextInt(totalDegreeDeficit())+1; // TODO: check if range is as desired?
-        System.out.print("Randomint:" + Integer.toString(randomInt));
+        int randomInt = randomGenerator.nextInt(totalDegreeDeficit())+1;
+        //System.out.print("Randomint:" + Integer.toString(randomInt));
         int prefixSum = 0;
         int position = 0;
         Integer returnPosition = null;
         for (Integer degree : degreeDeficit) {
-            if (prefixSum < randomInt && randomInt <= prefixSum + degree) // TODO: check if this is a desired
+            if (prefixSum < randomInt && randomInt <= prefixSum + degree)
                 returnPosition = new Integer(position);
             prefixSum += degree;
             position ++;
         }
-        if (returnPosition != null) {
+        /* if (returnPosition != null) {
             System.out.print(" | returnPosition: " + Integer.toString(returnPosition));
             System.out.println(" | degree of position: " + Integer.toString(degreeDeficit.get(returnPosition)));
         } else {
             System.out.println("Random number generation failed:" + Integer.toString(randomInt));
-        }
+        }*/
 
         return returnPosition;
+    }
+
+    public int nmbrOfSatisfiedNodes() {
+        int satisfied = 0;
+        for (Integer degree : degreeDeficit) {
+            if (degree == 0) {
+                satisfied++;
+            }
+        }
+        return satisfied;
     }
 
     public DegreeDeficitVector clone() {

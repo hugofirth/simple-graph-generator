@@ -4,6 +4,7 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import org.edbt.summerschool.simple_graph_generator.generator.Generator;
+import org.edbt.summerschool.simple_graph_generator.generator.Strategy;
 import org.edbt.summerschool.simple_graph_generator.graph.GraphMethods;
 
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ public class DEGGenerator implements Generator {
 
     @Override
     public Graph call() throws Exception {
+        int originalNumTriangles = this.numTriangles;
+        int distance = 0;
+
 
         // create empty graph
         Graph g = new TinkerGraph();
@@ -63,16 +67,20 @@ public class DEGGenerator implements Generator {
                 vertexA.addEdge("", vertexB);
                 degreeDeficit.decrease(a);
                 degreeDeficit.decrease(b);
+                distance += Math.abs(a - b);
             }
             if (!GraphMethods.edgeExists(vertexB,vertexC)) {
                 vertexB.addEdge("", vertexC);
                 degreeDeficit.decrease(b);
                 degreeDeficit.decrease(c);
+                distance += Math.abs(b-c);
+
             }
             if (!GraphMethods.edgeExists(vertexA,vertexC)) {
                 vertexA.addEdge("", vertexC);
                 degreeDeficit.decrease(a);
                 degreeDeficit.decrease(c);
+                distance += Math.abs(a-c);
             }
             loopIterations = 0;
             numTriangles -= 1;
@@ -95,16 +103,18 @@ public class DEGGenerator implements Generator {
                 vertexA.addEdge("", vertexB);
                 degreeDeficit.decrease(a);
                 degreeDeficit.decrease(b);
+                distance += Math.abs(a-b);
                 loopIterations = 0;
             }
         }
 
-        int sat_n = n - optVector.getUnfinishedVertices();
-        int out_m = totalDegreeDeficit/2 - optVector.getEdgesLeft();
-        float out_cc = 3 * (numTriangles - optVector.getNumTrianglesLeft()) / (float) openTriangles(degreeSubSequence);
-        int locality = optVector.getEdgeDistance();
+        // TODO:
+        int sat_n = degreeDeficit.nmbrOfSatisfiedNodes();
+        int out_m = degreeDeficit.totalDegreeDeficit()/2;
+        //float out_cc = (float) 3 * (originalNumTriangles - numTriangles) / (float) Strategy.openTriangles( /*actual degreeSubSequence at the end*/); // actual number of triangles might be slightly higher
+        int locality = distance;
 
-        System.out.print(sat_n + ", " + out_m + ", " + out_cc + ", " + locality);
+        System.out.print(sat_n + ", " + out_m + ", $TODOCC, " + locality);
 
         return g;
     }
