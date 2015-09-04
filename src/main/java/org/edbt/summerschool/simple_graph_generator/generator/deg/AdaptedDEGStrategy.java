@@ -4,8 +4,9 @@ import com.tinkerpop.blueprints.Graph;
 import org.edbt.summerschool.simple_graph_generator.generator.Strategy;
 
 /**
- * This class implements the strategy as described in the Masters' thesis of Nidhi Parikh
+ * This class implements an adaptation of the strategy as described in the Masters' thesis of Nidhi Parikh
  * entitled "Generating Random Graphs with Tunable Clustering Coefficient".
+ * NOTICE: does not work at the moment!
  */
 public class AdaptedDEGStrategy implements Strategy {
 
