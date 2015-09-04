@@ -9,6 +9,8 @@ import org.edbt.summerschool.simple_graph_generator.graph.GraphMethods;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static org.edbt.summerschool.simple_graph_generator.generator.Strategy.openTriangles;
+
 
 /**
  * This class implements the generator as described in the Masters' thesis of Nidhi Parikh
@@ -96,6 +98,13 @@ public class DEGGenerator implements Generator {
                 loopIterations = 0;
             }
         }
+
+        int sat_n = n - optVector.getUnfinishedVertices();
+        int out_m = totalDegreeDeficit/2 - optVector.getEdgesLeft();
+        float out_cc = 3 * (numTriangles - optVector.getNumTrianglesLeft()) / (float) openTriangles(degreeSubSequence);
+        int locality = optVector.getEdgeDistance();
+
+        System.out.print(sat_n + ", " + out_m + ", " + out_cc + ", " + locality);
 
         return g;
     }

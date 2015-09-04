@@ -16,6 +16,7 @@ import org.edbt.summerschool.simple_graph_generator.generator.heuristic.Triangle
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.edbt.summerschool.simple_graph_generator.generator.Strategy.openTriangles;
 import static org.edbt.summerschool.simple_graph_generator.graph.GraphMethods.edgeExists;
 
 
@@ -66,7 +67,8 @@ public class SimpleGenerator implements Generator {
             if (degree > 0)
                 unfinishedNodes++;
         }
-
+        int n = position;
+        int m = totalDegreeDeficit;
 
         OptimisationVector optVector = new OptimisationVector((int)(numTriangles*0.05),(int)(position*0.05),numTriangles,unfinishedNodes,totalDegreeDeficit/2,0);
         while (!minimalDegreeDeficit) {
@@ -116,7 +118,17 @@ public class SimpleGenerator implements Generator {
 
         }
 
+        int sat_n = n - optVector.getUnfinishedVertices();
+        int out_m = totalDegreeDeficit/2 - optVector.getEdgesLeft();
+        float out_cc = 3 * (numTriangles - optVector.getNumTrianglesLeft()) / (float) openTriangles(degreeSubSequence);
+        int locality = optVector.getEdgeDistance();
+
+        System.out.print(sat_n + ", " + out_m + ", " + out_cc + ", " + locality);
+
+
 //        System.out.println("vector: " + optVector);
+
+
         return g;
     }
 

@@ -157,11 +157,13 @@ public class Main {
                 long startTime = System.currentTimeMillis();
                 while(!result.isDone())
                 {
-                    System.out.print(".");
+//                    System.out.print(".");
                     Thread.sleep(10);
                 }
                 long elapsedTime = System.currentTimeMillis()-startTime;
-
+                //        id, method, req_cc,time
+                System.out.print("*out*" + commandLine.getOptionValue("strategy") + ", " + ccoeff + ", " + elapsedTime*1000);
+                System.out.println();
 
                 Graph generated = result.get();
                 displayBlankLines(2, System.out);
